@@ -21,9 +21,20 @@ class TestController extends BaseController
         return $this->success($data, 'Data retrieved successfully');
     }
 
+    public function index(Request $request)
+    {
+        $data = $this->testInterface->index($request);
+        return $this->success($data, 'Data retrieved successfully');
+    }
     public function store(StoreTestRequest $request)
     {
         $data = $this->testInterface->store($request);
+        return $this->success($data, 'Data retrieved successfully');
+    }
+
+    public function show(Request $request, $id)
+    {
+        $data = $this->testInterface->show($request, $id);
         return $this->success($data, 'Data retrieved successfully');
     }
 }

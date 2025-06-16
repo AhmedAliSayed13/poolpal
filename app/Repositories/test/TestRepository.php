@@ -8,32 +8,96 @@ use App\Models\Alkalinity;
 use App\Models\Stabilizer;
 use App\Models\PoolWaterStatus;
 use App\Models\Pool;
-
+use App\Helpers\FilePublicManager;
+use App\Helpers\TestFunctions;
+use App\Models\Test;
 class TestRepository implements TestInterface
 {
-
     public function getData($request)
     {
-        $hardnesses=Hardness::all();
-        $chlorinees=Chlorine::all();
-        $freeChlorinees=FreeChlorine::all();
-        $phs=Ph::all();
-        $alkalinities=Alkalinity::all();
-        $stabilizeres=Stabilizer::all();
-        $poolWaterStatuses=PoolWaterStatus::all();
-        $pools=Pool::where('user_id', $request->user()->id)->get();
-        $data=[
-            'pools'=>$pools,
-            'hardness'=>$hardnesses,
-            'chlorine'=>$chlorinees,
-            'freeChlorine'=>$freeChlorinees,
-            'ph'=>$phs,
-            'alkalinity'=>$alkalinities,
-            'stabilizer'=>$stabilizeres,
-            'poolWaterStatus'=>$poolWaterStatuses
+        $hardnesses = Hardness::all();
+        $chlorinees = Chlorine::all();
+        $freeChlorinees = FreeChlorine::all();
+        $phs = Ph::all();
+        $alkalinities = Alkalinity::all();
+        $stabilizeres = Stabilizer::all();
+        $poolWaterStatuses = PoolWaterStatus::all();
+        $pools = Pool::where('user_id', $request->user()->id)->get();
+        $data = [
+            'pools' => $pools,
+            'hardness' => $hardnesses,
+            'chlorine' => $chlorinees,
+            'freeChlorine' => $freeChlorinees,
+            'ph' => $phs,
+            'alkalinity' => $alkalinities,
+            'stabilizer' => $stabilizeres,
+            'poolWaterStatus' => $poolWaterStatuses,
         ];
 
         return $data;
     }
+    public function index($request)
+    {
+        $tests = Test::where('user_id', $request->user()->id)->with(['pool', 'poolWaterStatus'])->get();
+        return $tests;
+    }
+    public function store($request)
+    {
+        $testFunctions=new TestFunctions();
+        $test = new Test();
+        $test->user_id = $request->user()->id;
+        $test->pool_id = $request->pool_id;
+        $test->pool_water_status_id = $request->pool_water_status_id;
 
+        $hardness=$testFunctions->GetHardness($request->hardness);
+        $test->hardness_value = $hardness->value;
+        $test->hardness_code = $hardness->code;
+        $test->hardness_status = $hardness->status;
+
+        $chlorine=$testFunctions->GetChlorine($request->chlorine);
+
+        $test->chlorine_value = $chlorine->value;
+        $test->chlorine_code = $chlorine->code;
+        $test->chlorine_status = $chlorine->status;
+
+        $free_chlorine=$testFunctions->GetFreeChlorine($request->free_chlorine);
+        $test->free_chlorine_value = $free_chlorine->value;
+        $test->free_chlorine_code = $free_chlorine->code;
+        $test->free_chlorine_status = $free_chlorine->status;
+
+        $ph=$testFunctions->GetPh($request->ph);
+        $test->ph_value = $ph->value;
+        $test->ph_code = $ph->code;
+        $test->ph_status = $ph->status;
+
+        $alkalinity=$testFunctions->GetAlkalinity($request->alkalinity);
+        $test->alkalinity_value = $alkalinity->value;
+        $test->alkalinity_code = $alkalinity->code;
+        $test->alkalinity_status = $alkalinity->status;
+
+        $stabilizer=$testFunctions->GetStabilizer($request->stabilizer);
+        $test->stabilizer_value = $stabilizer->value;
+        $test->stabilizer_code = $stabilizer->code;
+        $test->stabilizer_status = $stabilizer->status;
+
+        if ($request->hasFile('image')) {
+
+            $filePublicManager = new FilePublicManager('system');
+            $imageName = $filePublicManager->uploadFile(
+                $request->file('image'),
+                'test-images/user' . $request->user()->id
+            );
+
+            $imageName;
+            
+            $test->image = $imageName;
+        }
+        $test->save();
+        return true;
+    }
+    public function show($request, $id)
+    {
+        $test = Test::where(['id' => $id,'user_id'=>$request->user()->id])->with(['pool', 'poolWaterStatus'])->first();
+        return $test;
+    }
 }
