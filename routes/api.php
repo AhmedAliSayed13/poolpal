@@ -7,6 +7,7 @@ use App\Http\Controllers\API\MediaController;
 use App\Http\Controllers\API\SidingController;
 use App\Http\Controllers\API\PoolController;
 use App\Http\Controllers\API\ProfileController;
+use App\Http\Controllers\API\Test\TestController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,8 +27,12 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
+
     Route::put('/profile', [ProfileController::class, 'update']);
     Route::get('/medias', [MediaController::class, 'index']);
     Route::get('/sidings', [SidingController::class, 'index']);
     Route::apiResource('pools', PoolController::class);
+    Route::get('test-data', [TestController::class, 'getData']);
+    Route::apiResource('tests', TestController::class);
+
 });
