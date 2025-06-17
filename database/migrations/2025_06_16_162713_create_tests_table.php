@@ -47,6 +47,7 @@ return new class extends Migration
             $table->string('stabilizer_status');
 
             $table->string('image')->nullable();
+            $table->json('action_items')->nullable();
             $table->timestamps();
         });
     }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Repositories\test\TestInterface;
 use App\Http\Controllers\API\BaseController;
 use App\Http\Requests\test\StoreTestRequest;
+use App\Http\Requests\test\MakeTestRequest;
 class TestController extends BaseController
 {
     protected $testInterface;
@@ -19,6 +20,12 @@ class TestController extends BaseController
     {
         $data = $this->testInterface->getData($request);
         return $this->success($data, 'Data retrieved successfully');
+    }
+    public function testWater(MakeTestRequest $request)
+    {
+        $data = $this->testInterface->testWater($request);
+        return  $data;
+        // return $this->success($data, 'Data retrieved successfully');
     }
 
     public function index(Request $request)
