@@ -12,6 +12,7 @@ use App\Helpers\FilePublicManager;
 use App\Helpers\TestFunctions;
 use App\Models\Test;
 use App\Models\Ranges;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 class TestRepository implements TestInterface
 {
@@ -53,8 +54,6 @@ class TestRepository implements TestInterface
         $test->user_id = $request->user()->id;
         $test->pool_id = $request->pool_id;
         $test->pool_water_status_id = $request->pool_water_status_id;
-
-
 
         $hardness = $testFunctions->GetHardness($request->hardness);
         $test->hardness_value = $hardness->value;
@@ -99,7 +98,7 @@ class TestRepository implements TestInterface
             $test->image = $imageName;
         }
         $test->save();
-        if($request->has('action_items')) {
+        if ($request->has('action_items')) {
             $test->action_items = json_decode($request->action_items, true);
             $test->save();
         }
@@ -107,11 +106,38 @@ class TestRepository implements TestInterface
     }
     public function show($request, $id)
     {
-        $data['test'] = Test::where(['id' => $id, 'user_id' => $request->user()->id])
+        $data['test'] = Test::where([
+            'id' => $id,
+            'user_id' => $request->user()->id,
+        ])
             ->with(['pool', 'poolWaterStatus'])
             ->first();
-            $data['ranges']=Ranges::all();
+        $data['ranges'] = Ranges::all();
 
         return $data;
+    }
+    public function testWater($request)
+    {
+
+        if ($request->hasFile('test_strip')) {
+            $image = $request->file('test_strip');
+
+            $response = Http::attach(
+                'test_strip',
+                fopen($image->getRealPath(), 'r'),
+                $image->getClientOriginalName()
+            )->post(
+                'https://techroute66.app.n8n.cloud/webhook/analyze-test-strip'
+            );
+
+            return $response->json();
+        }
+
+        return response()->json(
+            [
+                'message' => 'No image uploaded',
+            ],
+            400
+        );
     }
 }
