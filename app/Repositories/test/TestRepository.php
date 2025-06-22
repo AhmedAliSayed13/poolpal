@@ -102,7 +102,7 @@ class TestRepository implements TestInterface
             $test->action_items = json_decode($request->action_items, true);
             $test->save();
         }
-        return true;
+        return $test->refresh();
     }
     public function show($request, $id)
     {
