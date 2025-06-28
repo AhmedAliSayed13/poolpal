@@ -4,17 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 
 class Pool extends Model
 {
-    use HasFactory;
+    use HasFactory,Filterable;
     protected $fillable = [
+        'id',
         'user_id',
         'name',
         'size',
         'siding_id',
         'media_id',
     ];
+    private static $whiteListFilter = ['*'];
 
     // app/Models/Pool.php
 public function media()

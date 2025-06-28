@@ -41,9 +41,10 @@ class TestRepository implements TestInterface
     }
     public function index($request)
     {
-        $tests = Test::where('user_id', $request->user()->id)
-            ->with(['pool', 'poolWaterStatus'])
-            ->get();
+        $tests = Test::AcceptRequest(getFillableSort('Test'))->where('user_id', $request->user()->id)
+        ->filter()
+        ->with(['pool', 'poolWaterStatus'])
+        ->get();
         return $tests;
     }
 

@@ -14,7 +14,7 @@ class PoolController extends BaseController
     // List all pools for the authenticated user
     public function index(Request $request)
     {
-        $pools = Pool::where('user_id', $request->user()->id)->with(['siding', 'media'])->get();
+        $pools = Pool::AcceptRequest(getFillableSort('Pool'))->where('user_id', $request->user()->id)->with(['siding', 'media'])->filter()->get();
         return $this->success($pools, 'Pools retrieved successfully');
     }
 

@@ -196,6 +196,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         // Repository provider
         App\Providers\RepositoryServiceProvider::class,
+        eloquentFilter\ServiceProvider::class
 
     ],
 
@@ -212,6 +213,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'EloquentFilter' => eloquentFilter\Facade\EloquentFilter::class,
     ])->toArray(),
 
 ];

@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Pool;
 use App\Models\PoolWaterStatus;
+use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 
 class Test extends Model
 {
-    use HasFactory;
+    use HasFactory,Filterable;
     protected $fillable = [
+        'id',
         'user_id',
         'pool_id',
         'pool_water_status_id',
@@ -41,7 +43,7 @@ class Test extends Model
     protected $casts = [
     'action_items' => 'array',
 ];
-
+private static $whiteListFilter = ['*'];
     public function user()
     {
         return $this->belongsTo(User::class);
