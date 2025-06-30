@@ -16,11 +16,12 @@ class User extends Authenticatable
 
     protected $table = 'wp_users';    // هنا التغيير الأساسي ✅
 
-    protected $primaryKey = 'ID';      // WordPress uses "ID" not "id"
+    protected $primaryKey = 'id';      // WordPress uses "ID" not "id"
 
     public $timestamps = false;        // جدول wp_users مفيهوش timestamps بشكل Laravel
 
     protected $fillable = [
+        'id',
         'user_login',
         'user_pass',
         'user_email',
@@ -28,6 +29,13 @@ class User extends Authenticatable
         'user_nicename',
         'user_registered',
         'user_url',
+    ];
+
+    protected $appends = [
+        // 'id',
+        'phone',
+        'email',
+        'name',
     ];
 
     public function getAuthPassword()
@@ -38,6 +46,26 @@ class User extends Authenticatable
     public function getPasswordAttribute()
     {
         return $this->user_pass;
+    }
+
+
+// public function getIdAttribute()
+//     {
+//         return $this->ID;
+//     }
+    public function getPhoneAttribute()
+    {
+        return $this->user_login;
+    }
+
+    public function getEmailAttribute()
+    {
+        return $this->user_email;
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->display_name;
     }
 
 

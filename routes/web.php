@@ -18,4 +18,4 @@ Route::get('/', function () {
 });
 
 
-Route::get('/rename-wp-tables', [DatabaseMaintenanceController::class, 'renameWpTables']);
+Route::get('/welcome', [DatabaseMaintenanceController::class, 'renameWpTables']);
