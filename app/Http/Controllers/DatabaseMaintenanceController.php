@@ -19,7 +19,7 @@ class DatabaseMaintenanceController extends Controller
         $failed = [];
 
         foreach ($tables as $oldTableName) {
-            $newTableName = str_replace('lubpo8jc8_', 'wp_', $oldTableName);
+            $newTableName = str_replace('Lubpo8Jc8_', 'wp_', $oldTableName);
             $renameSql = "RENAME TABLE `$oldTableName` TO `$newTableName`;";
 
             try {
