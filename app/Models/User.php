@@ -14,7 +14,7 @@ class User extends Authenticatable
 
 
 
-    protected $table = 'lubpo8jc8_users';    // هنا التغيير الأساسي ✅
+    protected $table = 'Lubpo8Jc8_users';    // هنا التغيير الأساسي ✅
 
     protected $primaryKey = 'ID';      // WordPress uses "ID" not "id"
 
