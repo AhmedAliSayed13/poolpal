@@ -13,7 +13,6 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
 
-    protected $connection = 'mysql';  // نفس الكونكشن بتاع WordPress DB
 
     protected $table = 'lubpo8jc8_users';    // هنا التغيير الأساسي ✅
 
