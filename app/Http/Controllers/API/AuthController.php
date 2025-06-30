@@ -13,8 +13,8 @@ class AuthController extends BaseController
 {
     $validator = Validator::make($request->all(), [
         'name'     => 'required|string|max:255',
-        'email'    => 'required|string|email|max:255|unique:lubpo8jc8_users,user_email',
-        'phone'    => 'required|string|unique:lubpo8jc8_users,user_login',
+        'email'    => 'required|string|email|max:255|unique:wp_users,user_email',
+        'phone'    => 'required|string|unique:wp_users,user_login',
         'password' => 'required|string|min:6',
     ]);
 
@@ -38,7 +38,7 @@ class AuthController extends BaseController
     ]);
 
     // Optional: Add user role as subscriber
-    DB::table('lubpo8jc8_usermeta')->insert([
+    DB::table('wp_usermeta')->insert([
         [
             'user_id' => $user->ID,
             'meta_key' => 'wp_capabilities',
