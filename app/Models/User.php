@@ -14,12 +14,17 @@ class User extends Authenticatable
 
 
 
-    protected $table = 'wp_users';    // هنا التغيير الأساسي ✅
+protected $connection = 'mysql';
+    protected $table = 'wp_users';
+    protected $primaryKey = 'ID';
+    public $timestamps = false;
+    public $incrementing = true;
+    protected $keyType = 'int';
 
-    protected $primaryKey = 'id';      // WordPress uses "ID" not "id"
-
-    public $timestamps = false;        // جدول wp_users مفيهوش timestamps بشكل Laravel
-
+    protected $hidden = [
+        'user_pass',
+        'remember_token',
+    ];
     protected $fillable = [
         'id',
         'user_login',
