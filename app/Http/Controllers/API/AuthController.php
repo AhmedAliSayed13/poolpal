@@ -58,27 +58,38 @@ class AuthController extends BaseController
     ], 'User registered successfully');
 }
     public function login(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'phone'    => 'required|string',
-            'password' => 'required|string',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'phone'    => 'required|string',
+        'password' => 'required|string',
+    ]);
 
-        if ($validator->fails()) {
-            return $this->error('Validation failed', $validator->errors(), 422);
-        }
-
-        $user = User::where('phone', $request->phone)->first();
-
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            return $this->error('Invalid credentials', [], 401);
-        }
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return $this->success([
-            'user'  => $user,
-            'token' => $token,
-        ], 'Login successful');
+    if ($validator->fails()) {
+        return $this->error('Validation failed', $validator->errors(), 422);
     }
+
+    // WordPress stores phone in user_login
+    $user = User::where('user_login', $request->phone)->first();
+
+    if (! $user) {
+        return $this->error('Invalid credentials', [], 401);
+    }
+
+    // Load WordPress password hasher
+    require_once base_path(env('WP_PASSWORD_HASH_PATH')); // أو حسب المسار عندك
+    $wp_hasher = new \PasswordHash(8, true);
+
+    if (! $wp_hasher->CheckPassword($request->password, $user->user_pass)) {
+        return $this->error('Invalid credentials', [], 401);
+    }
+
+    // Create Laravel token
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return $this->success([
+        'user'  => $user,
+        'token' => $token,
+    ], 'Login successful');
+}
+
 }
