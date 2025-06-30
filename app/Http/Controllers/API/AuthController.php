@@ -13,6 +13,7 @@ class AuthController extends BaseController
 {
     public function register(Request $request)
 {
+    DB::beginTransaction();
     $validator = Validator::make($request->all(), [
         'name'     => 'required|string|max:255',
         'email'    => 'required|string|email|max:255|unique:wp_users,user_email',
@@ -54,6 +55,7 @@ class AuthController extends BaseController
         ],
     ]);
 
+    DB::commit();
     return $this->success([
         'user'  => $user->refresh(),
     ], 'User registered successfully');
