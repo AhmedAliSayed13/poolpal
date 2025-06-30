@@ -26,7 +26,7 @@ protected $connection = 'mysql';
         'remember_token',
     ];
     protected $fillable = [
-        'id',
+        'ID',
         'user_login',
         'user_pass',
         'user_email',
@@ -37,7 +37,7 @@ protected $connection = 'mysql';
     ];
 
     protected $appends = [
-        // 'id',
+        'id',
         'phone',
         'email',
         'name',
@@ -54,10 +54,10 @@ protected $connection = 'mysql';
     }
 
 
-// public function getIdAttribute()
-//     {
-//         return $this->ID;
-//     }
+public function getIdAttribute()
+{
+    return $this->attributes['ID'];
+}
     public function getPhoneAttribute()
     {
         return $this->user_login;

@@ -39,17 +39,17 @@ class AuthController extends BaseController
         'user_registered'  => now(),
         'user_url'         => 'https://trynqee.com/',
     ]);
-
+    
 
     // Optional: Add user role as subscriber
     DB::table('wp_usermeta')->insert([
         [
-            'user_id' => $user->id,
+            'user_id' => $user->ID,
             'meta_key' => 'wp_capabilities',
             'meta_value' => 'a:1:{s:10:"subscriber";b:1;}',
         ],
         [
-            'user_id' => $user->id,
+            'user_id' => $user->ID,
             'meta_key' => 'wp_user_level',
             'meta_value' => 0,
         ],
