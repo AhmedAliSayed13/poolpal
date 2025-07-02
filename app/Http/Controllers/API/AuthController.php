@@ -98,8 +98,8 @@ class AuthController extends BaseController
             return $this->success(
                 [
                     'user' => $user,
-                    'token' => $response->json()['token'],
-                    'laravel_token' => $user->createToken('auth_token')->plainTextToken,
+                    'wp_token' => $response->json()['token'],
+                    'token' => $user->createToken('auth_token')->plainTextToken,
 
                 ],
                 'Login successful'
