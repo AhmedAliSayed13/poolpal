@@ -27,7 +27,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::POST('test-water', [TestController::class, 'testWater']);
-Route::middleware('wp.jwt')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update']);
     Route::get('/medias', [MediaController::class, 'index']);
     Route::get('/sidings', [SidingController::class, 'index']);
