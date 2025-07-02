@@ -18,8 +18,8 @@ class AuthController extends BaseController
     DB::beginTransaction();
     $validator = Validator::make($request->all(), [
         'name'     => 'required|string|max:255',
-        'email'    => 'required','string','email','max:255',Rule::unique((new User())->getTable(), 'user_email'),
-        'phone'    =>'required','string',Rule::unique((new User())->getTable(), 'user_login'),
+        'email'    => 'required|string|email|max:255|unique:Lubpo8Jc8_users,user_email',
+        'phone'    => 'required|string|unique:Lubpo8Jc8_users,user_login',
         'password' => 'required|string|min:6',
     ]);
 
@@ -56,8 +56,6 @@ class AuthController extends BaseController
         'meta_value' => 0,
     ],
 ]);
-
-
 
     DB::commit();
     return $this->success([
