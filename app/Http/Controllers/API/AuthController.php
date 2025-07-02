@@ -104,12 +104,6 @@ class AuthController extends BaseController
             );
         }
 
-        return $this->success(
-            [
-                'user' => $user,
-                'token' => $token,
-            ],
-            'Login successful'
-        );
+        return $this->error('Invalid credentials', [], 403);
     }
 }
