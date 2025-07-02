@@ -15,7 +15,7 @@ class User extends Authenticatable
 
 
 protected $connection = 'mysql';
-    protected $table = 'wp_users';
+    protected $table = 'Lubpo8Jc8_users';
     protected $primaryKey = 'ID';
     public $timestamps = false;
     public $incrementing = true;
