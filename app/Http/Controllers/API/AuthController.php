@@ -98,7 +98,9 @@ class AuthController extends BaseController
             return $this->success(
                 [
                     'user' => $user,
-                    'token' => $user->createToken('auth_token')->plainTextToken,
+                    'token' => $response->json()['token'],
+                    'laravel_token' => $user->createToken('auth_token')->plainTextToken,
+
                 ],
                 'Login successful'
             );
