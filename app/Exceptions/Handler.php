@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
 {
@@ -56,4 +57,24 @@ class Handler extends ExceptionHandler
             ]);
         });
     }
+
+//     protected function unauthenticated($request, \Illuminate\Auth\AuthenticationException $exception)
+// {
+//     if ($request->expectsJson()) {
+//         return response()->json(['message' => 'Unauthenticated.'], 401);
+//     }
+
+//     return redirect()->guest(route('login'));
+// }
+
+
+protected function unauthenticated($request, AuthenticationException $exception)
+{
+    return response()->json([
+        'status' => false,
+        'message' => 'Token is invalid or missing',
+        'code' => 401
+    ], 401);
+}
+
 }
