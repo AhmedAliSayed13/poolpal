@@ -15,13 +15,15 @@ class ChlorineTableSeeder extends Seeder
      */
     public function run()
     {
-         $itemsTotalChlorine = [
-    ['id' => 1, 'code' => '#FAF7CD', 'value' => '0', 'status' => 'VERY LOW'],
-    ['id' => 2, 'code' => '#F7F5B1', 'value' => '1', 'status' => 'IDEAL'],
-    ['id' => 3, 'code' => '#EFF0A5', 'value' => '3', 'status' => 'IDEAL'],
-    ['id' => 4, 'code' => '#BAD7BD', 'value' => '5', 'status' => 'HIGH'],
-    ['id' => 5, 'code' => '#7AAEA5', 'value' => '10', 'status' => 'VERY HIGH'],
-];
+        $itemsTotalChlorine = [
+            ['id' => 1, 'code' => '#FDF7CD', 'value' => '0', 'status' => 'VERY LOW'],
+            ['id' => 2, 'code' => '#FAF4B2', 'value' => '0.5', 'status' => 'LOW'],
+            ['id' => 3, 'code' => '#F7EA9D', 'value' => '1', 'status' => 'IDEAL'],
+            ['id' => 4, 'code' => '#E2D874', 'value' => '3', 'status' => 'OK'],
+            ['id' => 5, 'code' => '#C3CE76', 'value' => '5', 'status' => 'HIGH'],
+            ['id' => 6, 'code' => '#9ACB7F', 'value' => '10', 'status' => 'VERY HIGH'],
+        ];
+
 
 
 

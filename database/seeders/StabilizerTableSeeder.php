@@ -15,13 +15,13 @@ class StabilizerTableSeeder extends Seeder
      */
     public function run()
     {
-         $itemsStabilizer = [
-            ['id' => 1, 'code' => '#D89048', 'value' => '0', 'status' => 'LOW'],
-            ['id' => 2, 'code' => '#C17340', 'value' => '50', 'status' => 'OK'],
-            ['id' => 3, 'code' => '#B45B5D', 'value' => '100', 'status' => 'OK'],
-            ['id' => 4, 'code' => '#9A4361', 'value' => '150', 'status' => 'HIGH'],
-            ['id' => 5, 'code' => '#792F76', 'value' => '300', 'status' => 'VERY HIGH'],
-        ];
+         $itemsStabilizer =  [
+        ['id' => 1, 'code' => '#F4B16A', 'value' => '0', 'status' => 'LOW'],
+        ['id' => 2, 'code' => '#E08B49', 'value' => '50', 'status' => 'OK'],
+        ['id' => 3, 'code' => '#C66558', 'value' => '100', 'status' => 'OK'],
+        ['id' => 4, 'code' => '#A44C67', 'value' => '150', 'status' => 'HIGH'],
+        ['id' => 5, 'code' => '#7C326C', 'value' => '240', 'status' => 'VERY HIGH'],
+    ];
 
 
         foreach ($itemsStabilizer as $item) {

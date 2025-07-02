@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('ranges', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('title');
             $table->double('min', 8, 2);
             $table->double('max', 8, 2);
             $table->timestamps();

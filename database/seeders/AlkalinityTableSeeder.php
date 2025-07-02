@@ -15,13 +15,15 @@ class AlkalinityTableSeeder extends Seeder
      */
     public function run()
     {
-         $itemsAlkalinity = [
-    ['id' => 1, 'code' => '#EEE3AD', 'value' => '0', 'status' => 'VERY LOW'],
-    ['id' => 2, 'code' => '#D4C974', 'value' => '40', 'status' => 'LOW'],
-    ['id' => 3, 'code' => '#B3B765', 'value' => '120', 'status' => 'OK'],
-    ['id' => 4, 'code' => '#78997B', 'value' => '180', 'status' => 'HIGH'],
-    ['id' => 5, 'code' => '#5B7E89', 'value' => '240', 'status' => 'VERY HIGH'],
-];
+        $itemsAlkalinity = [
+            ['id' => 1, 'code' => '#FDF5C7', 'value' => '0', 'status' => 'VERY LOW'],
+            ['id' => 2, 'code' => '#E7D769', 'value' => '40', 'status' => 'LOW'],
+            ['id' => 3, 'code' => '#C8C960', 'value' => '80', 'status' => 'IDEAL'],
+            ['id' => 4, 'code' => '#9DBE6A', 'value' => '120', 'status' => 'OK'],
+            ['id' => 5, 'code' => '#76B378', 'value' => '180', 'status' => 'HIGH'],
+            ['id' => 6, 'code' => '#5F9B89', 'value' => '240', 'status' => 'VERY HIGH'],
+        ];
+
 
 
 

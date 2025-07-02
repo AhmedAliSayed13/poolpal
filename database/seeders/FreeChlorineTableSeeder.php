@@ -15,13 +15,16 @@ class FreeChlorineTableSeeder extends Seeder
      */
     public function run()
     {
-         $itemsFreeChlorine = [
-    ['id' => 1, 'code' => '#F8E8E3', 'value' => '0', 'status' => 'LOW'],
-    ['id' => 2, 'code' => '#F7EBDD', 'value' => '1', 'status' => 'IDEAL'],
-    ['id' => 3, 'code' => '#E3C8D2', 'value' => '3', 'status' => 'IDEAL'],
-    ['id' => 4, 'code' => '#C48AC6', 'value' => '5', 'status' => 'HIGH'],
-    ['id' => 5, 'code' => '#993693', 'value' => '10', 'status' => 'VERY HIGH'],
-];
+        $itemsFreeChlorine = [
+            ['id' => 1, 'code' => '#FDF2F2', 'value' => '0', 'status' => 'VERY LOW'],
+            ['id' => 2, 'code' => '#FBD9DB', 'value' => '0.5', 'status' => 'LOW'],
+            ['id' => 3, 'code' => '#F4B9C4', 'value' => '1', 'status' => 'IDEAL'],
+            ['id' => 4, 'code' => '#E38AAE', 'value' => '3', 'status' => 'OK'],
+            ['id' => 5, 'code' => '#D2639C', 'value' => '5', 'status' => 'HIGH'],
+            ['id' => 6, 'code' => '#B63E82', 'value' => '10', 'status' => 'VERY HIGH'],
+        ];
+
+
 
 
 

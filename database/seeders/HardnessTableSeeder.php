@@ -16,12 +16,13 @@ class HardnessTableSeeder extends Seeder
     public function run()
     {
          $itemsHardness = [
-    ['id' => 1, 'code' => '#3A3B7A', 'value' => '0', 'status' => 'VERY LOW'],
-    ['id' => 2, 'code' => '#5E5DAD', 'value' => '100', 'status' => 'LOW'],
-    ['id' => 3, 'code' => '#999CCB', 'value' => '250', 'status' => 'OK'],
-    ['id' => 4, 'code' => '#AC75A5', 'value' => '500', 'status' => 'HIGH'],
-    ['id' => 5, 'code' => '#984676', 'value' => '1000', 'status' => 'VERY HIGH'],
+    ['id' => 1, 'code' => '#F4F2F2', 'value' => '0', 'status' => 'VERY LOW'],       // أبيض فاتح
+    ['id' => 2, 'code' => '#CEC9D9', 'value' => '100', 'status' => 'LOW'],          // رمادي موف فاتح
+    ['id' => 3, 'code' => '#B2A8CC', 'value' => '250', 'status' => 'IDEAL'],           // موف فاتح
+    ['id' => 4, 'code' => '#9A84B6', 'value' => '500', 'status' => 'OK'],         // موف متوسط
+    ['id' => 5, 'code' => '#7A62A6', 'value' => '1000', 'status' => 'VERY HIGH'],   // بنفسجي غامق
 ];
+
 
 
 
