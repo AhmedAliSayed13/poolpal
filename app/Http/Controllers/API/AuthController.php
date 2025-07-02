@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+
 
 class AuthController extends BaseController
 {
@@ -16,8 +18,8 @@ class AuthController extends BaseController
     DB::beginTransaction();
     $validator = Validator::make($request->all(), [
         'name'     => 'required|string|max:255',
-        'email'    => 'required|string|email|max:255|unique:wp_users,user_email',
-        'phone'    => 'required|string|unique:wp_users,user_login',
+        'email'    => 'required','string','email','max:255',Rule::unique((new User())->getTable(), 'user_email'),
+        'phone'    =>'required','string',Rule::unique((new User())->getTable(), 'user_login'),
         'password' => 'required|string|min:6',
     ]);
 
@@ -39,7 +41,7 @@ class AuthController extends BaseController
         'user_registered'  => now(),
         'user_url'         => 'https://trynqee.com/',
     ]);
-    
+
 
     // Optional: Add user role as subscriber
     DB::table('wp_usermeta')->insert([
