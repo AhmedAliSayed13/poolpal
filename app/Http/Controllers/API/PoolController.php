@@ -14,7 +14,7 @@ class PoolController extends BaseController
     // List all pools for the authenticated user
     public function index(Request $request)
     {
-        $pools = Pool::AcceptRequest(getFillableSort('Pool'))->where('user_id', $request->user()->id)->with(['siding', 'media'])->filter()->get();
+        $pools = Pool::AcceptRequest(getFillableSort('Pool'))->where('user_id', $request->get('user')->id)->with(['siding', 'media'])->filter()->get();
         return $this->success($pools, 'Pools retrieved successfully');
     }
 
@@ -33,7 +33,7 @@ class PoolController extends BaseController
             return $this->error('Validation Error', $validator->errors(), 422);
         }
 
-        $userId = $request->user()->id;
+        $userId = $request->get('user')->id;
 
         // تحقق أن siding يخص المستخدم
         if (!Siding::where('id', $request->siding_id)->exists()) {
@@ -59,7 +59,7 @@ class PoolController extends BaseController
     // Show single pool
     public function show(Request $request, $id)
     {
-        $pool = Pool::where('user_id', $request->user()->id)->with(['siding', 'media'])->find($id);
+        $pool = Pool::where('user_id', $request->get('user')->id)->with(['siding', 'media'])->find($id);
 
         if (!$pool) {
             return $this->error('Pool not found', [], 404);
@@ -71,7 +71,7 @@ class PoolController extends BaseController
     // Update pool
     public function update(Request $request, $id)
     {
-        $pool = Pool::where('user_id', $request->user()->id)->find($id);
+        $pool = Pool::where('user_id', $request->get('user')->id)->find($id);
 
         if (!$pool) {
             return $this->error('Pool not found', [], 404);
@@ -88,7 +88,7 @@ class PoolController extends BaseController
             return $this->error('Validation Error', $validator->errors(), 422);
         }
 
-        $userId = $request->user()->id;
+        $userId = $request->get('user')->id;
 
         if ($request->has('siding_id') && !Siding::where('id', $request->siding_id)->exists()) {
             return $this->error('Invalid siding selected', [], 422);
@@ -106,7 +106,7 @@ class PoolController extends BaseController
     // Delete pool
     public function destroy(Request $request, $id)
     {
-        $pool = Pool::where('user_id', $request->user()->id)->find($id);
+        $pool = Pool::where('user_id', $request->get('user')->id)->find($id);
 
         if (!$pool) {
             return $this->error('Pool not found', [], 404);

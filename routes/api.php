@@ -19,7 +19,7 @@ use App\Http\Controllers\API\Test\TestController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('wp.jwt')->get('/user', function (Request $request) {
     return $request->user();
 });
 
@@ -27,7 +27,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::POST('test-water', [TestController::class, 'testWater']);
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['wp.jwt'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update']);
     Route::get('/medias', [MediaController::class, 'index']);
     Route::get('/sidings', [SidingController::class, 'index']);
@@ -37,6 +37,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tests', TestController::class)->only([
         'store',
         'show',
-        'index'
+        'index',
     ]);
 });

@@ -14,6 +14,7 @@ use App\Models\Test;
 use App\Models\Ranges;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 class TestRepository implements TestInterface
 {
     public function getData($request)
@@ -25,7 +26,7 @@ class TestRepository implements TestInterface
         $alkalinities = Alkalinity::all();
         $stabilizeres = Stabilizer::all();
         $poolWaterStatuses = PoolWaterStatus::all();
-        $pools = Pool::where('user_id', $request->user()->id)->get();
+        $pools = Pool::where('user_id', $request->get('user')->id)->get();
         $data = [
             'pools' => $pools,
             'hardness' => $hardnesses,
@@ -41,7 +42,8 @@ class TestRepository implements TestInterface
     }
     public function index($request)
     {
-        $tests = Test::AcceptRequest(getFillableSort('Test'))->where('user_id', $request->user()->id)
+
+        $tests = Test::AcceptRequest(getFillableSort('Test'))->where('user_id', $request->get('user')->id)
         ->filter()
         ->with(['pool', 'poolWaterStatus'])
         ->get();
@@ -52,7 +54,7 @@ class TestRepository implements TestInterface
     {
         $testFunctions = new TestFunctions();
         $test = new Test();
-        $test->user_id = $request->user()->id;
+        $test->user_id = $request->get('user')->id;
         $test->pool_id = $request->pool_id;
         $test->pool_water_status_id = $request->pool_water_status_id;
 
@@ -93,7 +95,7 @@ class TestRepository implements TestInterface
             $filePublicManager = new FilePublicManager('system');
             $imageName = $filePublicManager->uploadFile(
                 $request->file('image'),
-                'test-images/user' . $request->user()->id
+                'test-images/user' . $request->get('user')->id
             );
 
             $test->image = $imageName;
@@ -109,7 +111,7 @@ class TestRepository implements TestInterface
     {
         $data['test'] = Test::where([
             'id' => $id,
-            'user_id' => $request->user()->id,
+            'user_id' => $request->get('user')->id,
         ])
             ->with(['pool', 'poolWaterStatus'])
             ->first();

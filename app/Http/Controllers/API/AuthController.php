@@ -75,13 +75,10 @@ class AuthController extends BaseController
         ]);
 
 
-
-
         if ($validator->fails()) {
             return $this->error('Validation failed', $validator->errors(), 422);
         }
 
-        // WordPress stores phone in user_login
         $user = User::where('user_login', $request->phone)->first();
 
         if (!$user) {
@@ -98,9 +95,7 @@ class AuthController extends BaseController
             return $this->success(
                 [
                     'user' => $user,
-                    'wp_token' => $response->json()['token'],
-                    'token' => $user->createToken('auth_token')->plainTextToken,
-
+                    'token' => $response->json()['token']
                 ],
                 'Login successful'
             );
