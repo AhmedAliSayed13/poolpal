@@ -29,7 +29,7 @@ class AuthController extends BaseController
         }
 
         // Include WordPress password hasher
-        require_once base_path('app/Helpers/class-phpass.php');
+        require_once base_path(env('WP_PASSWORD_HASH_PATH'));
         $wp_hasher = new \PasswordHash(8, true);
         $hashed_password = $wp_hasher->HashPassword($request->password);
 
@@ -74,7 +74,6 @@ class AuthController extends BaseController
             'password' => 'required|string',
         ]);
 
-
         if ($validator->fails()) {
             return $this->error('Validation failed', $validator->errors(), 422);
         }
@@ -87,15 +86,15 @@ class AuthController extends BaseController
 
         $response = Http::post(env('ENDPOINT_LOGIN'), [
             'username' => $request->phone,
-            'password' => $request->password
+            'password' => $request->password,
         ]);
 
         if ($response->successful()) {
-            $user=User::where('user_login', $request->phone)->first();
+            $user = User::where('user_login', $request->phone)->first();
             return $this->success(
                 [
                     'user' => $user,
-                    'token' => $response->json()['token']
+                    'token' => $response->json()['token'],
                 ],
                 'Login successful'
             );
