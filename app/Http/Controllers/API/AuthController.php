@@ -60,9 +60,17 @@ class AuthController extends BaseController
         ]);
 
         DB::commit();
+
+        $response = Http::post(env('ENDPOINT_LOGIN'), [
+            'username' => $request->phone,
+            'password' => $request->password,
+        ]);
+
+
         return $this->success(
             [
                 'user' => $user->refresh(),
+                'token' => isset($response->json()['token']) ? $response->json()['token'] : null,
             ],
             'User registered successfully'
         );
