@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Support\Facades\Log;
 class AuthController extends BaseController
 {
     public function register(Request $request)
@@ -65,6 +65,16 @@ class AuthController extends BaseController
             'username' => $request->phone,
             'password' => $request->password,
         ]);
+        if (!$response->successful()) {
+            $errorMessage = $response->body(); // Full raw response body
+            $statusCode = $response->status(); // HTTP status code
+            Log::channel('slack')->error('error in register user generate token from wp', [
+                'user_id' => auth()->id(),
+                'route' => request()->path(),
+                'message' => $errorMessage,
+            ]);
+
+        }
 
 
         return $this->success(
@@ -106,6 +116,14 @@ class AuthController extends BaseController
                 ],
                 'Login successful'
             );
+        }else{
+            $errorMessage = $response->body(); // Full raw response body
+            $statusCode = $response->status(); // HTTP status code
+            Log::channel('slack')->error('error in login user generate token from wp', [
+                'user_id' => auth()->id(),
+                'route' => request()->path(),
+                'message' => $errorMessage,
+            ]);
         }
 
         return $this->error('Invalid credentials', [], 403);
