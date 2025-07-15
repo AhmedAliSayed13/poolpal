@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('tests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('user_id');
+
             $table->unsignedBigInteger('pool_id');
             $table->foreign('pool_id')->references('id')->on('pools')->onDelete('cascade');
             $table->unsignedBigInteger('pool_water_status_id');

@@ -15,8 +15,7 @@ return new class extends Migration
     {
         Schema::create('pools', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('user_id');
             $table->unsignedBigInteger('media_id');
             $table->foreign('media_id')->references('id')->on('medias')->onDelete('cascade');
             $table->unsignedBigInteger('siding_id');

@@ -9,8 +9,10 @@ use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 class Pool extends Model
 {
     use HasFactory,Filterable;
+     protected $table = 'pools';
+    protected $primaryKey = 'id';
+    public $incrementing = true;
     protected $fillable = [
-        'id',
         'user_id',
         'name',
         'size',
