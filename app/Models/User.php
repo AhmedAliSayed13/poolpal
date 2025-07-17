@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
+use Illuminate\Support\Facades\DB;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -60,7 +60,11 @@ public function getIdAttribute()
 }
     public function getPhoneAttribute()
     {
-        return $this->user_login;
+        $phone = DB::table('Lubpo8Jc8_usermeta')
+    ->where('user_id', $user->ID)
+    ->where('meta_key', 'billing_phone')
+    ->value('meta_value');
+        return $phone;
     }
 
     public function getEmailAttribute()
