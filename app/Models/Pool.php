@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use eloquentFilter\QueryFilter\ModelFilters\Filterable;
-
+use App\Models\Test;
 class Pool extends Model
 {
     use HasFactory,Filterable;
@@ -19,6 +19,7 @@ class Pool extends Model
         'siding_id',
         'media_id',
     ];
+    protected $appends = ['look_like'];
     private static $whiteListFilter = ['*'];
 
     // app/Models/Pool.php
@@ -36,5 +37,13 @@ public function user()
 {
     return $this->belongsTo(User::class);
 }
+public function getLookLikeAttribute()
+    {
+        $test=Test::with('poolWaterStatus')->where('pool_id','=',$this->id)->latest()->first();
+        if($test){
+            return isset($test->poolWaterStatus->name)?$test->poolWaterStatus->name:null;
+        }
+        return null;
+    }
 
 }

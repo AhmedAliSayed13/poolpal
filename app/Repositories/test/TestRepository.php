@@ -11,6 +11,8 @@ use App\Models\Pool;
 use App\Helpers\FilePublicManager;
 use App\Helpers\TestFunctions;
 use App\Models\Test;
+use App\Models\Task;
+use App\Models\Step;
 use App\Models\Ranges;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -103,8 +105,10 @@ class TestRepository implements TestInterface
         $test->save();
         if ($request->has('action_items')) {
             $test->action_items = json_decode($request->action_items, true);
-            $test->save();
+
         }
+        $test->save();
+        $this->SaveTasks($test,$test->action_items);
         return $test->refresh();
     }
     public function show($request, $id)
@@ -142,5 +146,23 @@ class TestRepository implements TestInterface
             ],
             400
         );
+    }
+    public function SaveTasks($test,$actions)
+    {
+
+        foreach ($actions as $action) {
+            $task = new Task();
+            $task->user_id = $test->user_id;
+            $task->test_id = $test->id;
+            $task->pool_id = $test->pool_id;
+            $task->title = $action['issue'];
+            $task->save();
+            foreach ($action['steps'] as $stepItem) {
+                $step = new Step();
+                $step->task_id = $task->id;
+                $step->title = $stepItem;
+                $step->save();
+            }
+        }
     }
 }

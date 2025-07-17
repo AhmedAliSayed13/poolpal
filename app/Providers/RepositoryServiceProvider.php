@@ -5,6 +5,8 @@
 // website
 use App\Repositories\test\TestInterface;
 use App\Repositories\test\TestRepository;
+use App\Repositories\task\TaskInterface;
+use App\Repositories\task\TaskRepository;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -31,6 +33,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             TestInterface::class,
             TestRepository::class
+        );
+        // Task
+        $this->app->bind(
+            TaskInterface::class,
+            TaskRepository::class
         );
 
 

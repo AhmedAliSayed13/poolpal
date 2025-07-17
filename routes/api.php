@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\MediaController;
 use App\Http\Controllers\API\SidingController;
 use App\Http\Controllers\API\PoolController;
+use App\Http\Controllers\API\Task\TaskController;
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\Test\TestController;
 /*
@@ -32,6 +33,7 @@ Route::middleware(['wp.jwt'])->group(function () {
     Route::get('/medias', [MediaController::class, 'index']);
     Route::get('/sidings', [SidingController::class, 'index']);
     Route::apiResource('pools', PoolController::class);
+    Route::apiResource('tasks', TaskController::class);
     Route::get('test-data', [TestController::class, 'getData']);
 
     Route::apiResource('tests', TestController::class)->only([
