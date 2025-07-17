@@ -61,7 +61,7 @@ public function getIdAttribute()
     public function getPhoneAttribute()
     {
         $phone = DB::table('Lubpo8Jc8_usermeta')
-    ->where('user_id', $user->ID)
+    ->where('user_id', $this->attributes['ID'])
     ->where('meta_key', 'billing_phone')
     ->value('meta_value');
         return $phone;
