@@ -20,7 +20,7 @@ class AuthController extends BaseController
             'name' => 'required|string|max:255',
             'email' =>
                 'required|string|email|max:255|unique:Lubpo8Jc8_users,user_email',
-            'phone' => 'required|string|unique:Lubpo8Jc8_users,user_login',
+            'phone' => 'required|string',
             'password' => 'required|string|min:6',
         ]);
 
@@ -38,7 +38,7 @@ class AuthController extends BaseController
             'user_nicename' => strtolower(
                 str_replace(' ', '-', $request->name)
             ), // Slugified name
-            'user_login' => $request->phone, // بتستخدم الموبايل كـ username
+            'user_login' => $request->email, // بتستخدم الموبايل كـ username
             'user_pass' => $hashed_password, // ✅ لازم تبقى بنفس Hash WordPress
             'user_email' => $request->email,
             'user_registered' => now(),
@@ -57,12 +57,17 @@ class AuthController extends BaseController
                 'meta_key' => 'wp_user_level',
                 'meta_value' => 0,
             ],
+            [
+                'user_id' => $user->ID,
+                'meta_key' => 'billing_phone', // أو 'phone' لو مش WooCommerce
+                'meta_value' => $request->phone,
+            ],
         ]);
 
         DB::commit();
 
         $response = Http::post(env('ENDPOINT_LOGIN'), [
-            'username' => $request->phone,
+            'username' => $request->email,
             'password' => $request->password,
         ]);
         if (!$response->successful()) {
@@ -88,7 +93,7 @@ class AuthController extends BaseController
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|string',
+            'email' => 'required|string',
             'password' => 'required|string',
         ]);
 
@@ -96,19 +101,19 @@ class AuthController extends BaseController
             return $this->error('Validation failed', $validator->errors(), 422);
         }
 
-        $user = User::where('user_login', $request->phone)->first();
+        $user = User::where('user_login', $request->email)->first();
 
         if (!$user) {
             return $this->error('Invalid credentials', [], 401);
         }
 
         $response = Http::post(env('ENDPOINT_LOGIN'), [
-            'username' => $request->phone,
+            'username' => $request->email,
             'password' => $request->password,
         ]);
 
         if ($response->successful()) {
-            $user = User::where('user_login', $request->phone)->first();
+            $user = User::where('user_login', $request->email)->first();
             return $this->success(
                 [
                     'user' => $user,
