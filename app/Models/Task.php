@@ -17,7 +17,7 @@ class Task extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $fillable = ['user_id', 'pool_id','test_id', 'description', 'processed'];
-
+private static $whiteListFilter = ['*'];
     public function test()
     {
         return $this->belongsTo(Test::class);
@@ -32,11 +32,4 @@ class Task extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function steps()
-    {
-        return $this->hasMany(Step::class);
-    }
-
-
 }

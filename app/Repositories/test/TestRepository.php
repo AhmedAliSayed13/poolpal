@@ -62,35 +62,35 @@ class TestRepository implements TestInterface
 
         $hardness = $testFunctions->GetHardness($request->hardness);
         $test->hardness_value = $hardness->value;
-        $test->hardness_code = $hardness->code;
+        // $test->hardness_code = $hardness->code;
         $test->hardness_status = $hardness->status;
 
         $chlorine = $testFunctions->GetChlorine($request->chlorine);
 
         $test->chlorine_value = $chlorine->value;
-        $test->chlorine_code = $chlorine->code;
+        // $test->chlorine_code = $chlorine->code;
         $test->chlorine_status = $chlorine->status;
 
         $free_chlorine = $testFunctions->GetFreeChlorine(
             $request->free_chlorine
         );
         $test->free_chlorine_value = $free_chlorine->value;
-        $test->free_chlorine_code = $free_chlorine->code;
+        // $test->free_chlorine_code = $free_chlorine->code;
         $test->free_chlorine_status = $free_chlorine->status;
 
         $ph = $testFunctions->GetPh($request->ph);
         $test->ph_value = $ph->value;
-        $test->ph_code = $ph->code;
+        // $test->ph_code = $ph->code;
         $test->ph_status = $ph->status;
 
         $alkalinity = $testFunctions->GetAlkalinity($request->alkalinity);
         $test->alkalinity_value = $alkalinity->value;
-        $test->alkalinity_code = $alkalinity->code;
+        // $test->alkalinity_code = $alkalinity->code;
         $test->alkalinity_status = $alkalinity->status;
 
         $stabilizer = $testFunctions->GetStabilizer($request->stabilizer);
         $test->stabilizer_value = $stabilizer->value;
-        $test->stabilizer_code = $stabilizer->code;
+        // $test->stabilizer_code = $stabilizer->code;
         $test->stabilizer_status = $stabilizer->status;
 
         if ($request->hasFile('image')) {
@@ -149,19 +149,14 @@ class TestRepository implements TestInterface
     }
     public function SaveTasks($test,$actions)
     {
-
         foreach ($actions as $action) {
+            foreach ($action['steps'] as $stepItem) {
             $task = new Task();
             $task->user_id = $test->user_id;
             $task->test_id = $test->id;
             $task->pool_id = $test->pool_id;
-            $task->title = $action['issue'];
+            $task->title = $stepItem;
             $task->save();
-            foreach ($action['steps'] as $stepItem) {
-                $step = new Step();
-                $step->task_id = $task->id;
-                $step->title = $stepItem;
-                $step->save();
             }
         }
     }

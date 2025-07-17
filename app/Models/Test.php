@@ -58,4 +58,110 @@ private static $whiteListFilter = ['*'];
     {
         return $this->belongsTo(PoolWaterStatus::class);
     }
+
+    protected static function booted()
+{
+    static::saving(function ($test) {
+        $status='hardness_status';
+        $code='hardness_code';
+    $status_small = strtolower($test->$status);
+
+    $test->$code = match($status_small) {
+        'very high' => '#FF0000',
+        'high'      => '#FFA500',
+        'ideal'     => '#008000',
+        'ok'        => '#008000',
+        'low'       => '#FFA500',
+        'very low'  => '#FF0000',
+        default     => '#008000',
+        };
+    });
+
+    static::saving(function ($test) {
+        $status='chlorine_status';
+        $code='chlorine_code';
+    $status_small = strtolower($test->$status);
+
+    $test->$code = match($status_small) {
+        'very high' => '#FF0000',
+        'high'      => '#FFA500',
+        'ideal'     => '#008000',
+        'ok'        => '#008000',
+        'low'       => '#FFA500',
+        'very low'  => '#FF0000',
+        default     => '#008000',
+        };
+    });
+
+    static::saving(function ($test) {
+        $status='free_chlorine_status';
+        $code='free_chlorine_code';
+    $status_small = strtolower($test->$status);
+
+    $test->$code = match($status_small) {
+        'very high' => '#FF0000',
+        'high'      => '#FFA500',
+        'ideal'     => '#008000',
+        'ok'        => '#008000',
+        'low'       => '#FFA500',
+        'very low'  => '#FF0000',
+        default     => '#008000',
+        };
+    });
+
+    static::saving(function ($test) {
+        $status='ph_status';
+        $code='ph_code';
+    $status_small = strtolower($test->$status);
+
+    $test->$code = match($status_small) {
+        'very high' => '#FF0000',
+        'high'      => '#FFA500',
+        'ideal'     => '#008000',
+        'ok'        => '#008000',
+        'low'       => '#FFA500',
+        'very low'  => '#FF0000',
+        default     => '#008000',
+        };
+    });
+
+
+    static::saving(function ($test) {
+        $status='alkalinity_status';
+        $code='alkalinity_code';
+    $status_small = strtolower($test->$status);
+
+    $test->$code = match($status_small) {
+        'very high' => '#FF0000',
+        'high'      => '#FFA500',
+        'ideal'     => '#008000',
+        'ok'        => '#008000',
+        'low'       => '#FFA500',
+        'very low'  => '#FF0000',
+        default     => '#008000',
+        };
+    });
+
+
+
+    static::saving(function ($test) {
+        $status='stabilizer_status';
+        $code='stabilizer_code';
+    $status_small = strtolower($test->$status);
+
+    $test->$code = match($status_small) {
+        'very high' => '#FF0000',
+        'high'      => '#FFA500',
+        'ideal'     => '#008000',
+        'ok'        => '#008000',
+        'low'       => '#FFA500',
+        'very low'  => '#FF0000',
+        default     => '#008000',
+        };
+    });
+
+
+
+}
+
 }

@@ -23,27 +23,27 @@ return new class extends Migration
             $table->foreign('pool_water_status_id')->references('id')->on('pool_water_statuses')->onDelete('cascade');
 
             $table->double('hardness_value');
-            $table->string('hardness_code');
+            $table->string('hardness_code')->nullable();
             $table->string('hardness_status');
 
             $table->double('chlorine_value');
-            $table->string('chlorine_code');
+            $table->string('chlorine_code')->nullable();
             $table->string('chlorine_status');
 
             $table->double('free_chlorine_value');
-            $table->string('free_chlorine_code');
+            $table->string('free_chlorine_code')->nullable();
             $table->string('free_chlorine_status');
 
             $table->double('ph_value');
-            $table->string('ph_code');
+            $table->string('ph_code')->nullable();
             $table->string('ph_status');
 
             $table->double('alkalinity_value');
-            $table->string('alkalinity_code');
+            $table->string('alkalinity_code')->nullable();
             $table->string('alkalinity_status');
 
             $table->double('stabilizer_value');
-            $table->string('stabilizer_code');
+            $table->string('stabilizer_code')->nullable();
             $table->string('stabilizer_status');
 
             $table->string('image')->nullable();

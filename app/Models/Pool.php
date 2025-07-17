@@ -38,12 +38,16 @@ public function user()
     return $this->belongsTo(User::class);
 }
 public function getLookLikeAttribute()
-    {
-        $test=Test::with('poolWaterStatus')->where('pool_id','=',$this->id)->latest()->first();
-        if($test){
-            return isset($test->poolWaterStatus->name)?$test->poolWaterStatus->name:null;
-        }
-        return null;
+{
+    $test=Test::with('poolWaterStatus')->where('pool_id','=',$this->id)->latest()->first();
+    if($test){
+        return isset($test->poolWaterStatus->name)?$test->poolWaterStatus->name:null;
     }
+    return null;
+}
+public function latestTest()
+{
+    return $this->hasOne(Test::class)->latestOfMany(); // Uses created_at by default
+}
 
 }

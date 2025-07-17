@@ -23,7 +23,6 @@ class TaskRepository implements TaskInterface
         $tasks = Task::AcceptRequest(getFillableSort('Task'))
             ->where('user_id', $request->get('user')->id)
             ->filter()
-            ->with('steps')
             ->get();
         return $tasks;
     }
