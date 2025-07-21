@@ -16,7 +16,9 @@ return new class extends Migration
         Schema::create('request_services', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->text('message');
+            $table->text('address');
+            $table->text('service');
+            $table->string('phone');
             $table->timestamps();
         });
     }

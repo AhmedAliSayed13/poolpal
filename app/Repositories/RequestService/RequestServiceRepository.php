@@ -10,7 +10,9 @@ class RequestServiceRepository implements RequestServiceInterface
     {
         $requestService = new RequestService();
         $requestService->user_id = $request->get('user')->id;
-        $requestService->message = $request->message;
+        $requestService->address = $request->address;
+        $requestService->phone = $request->phone;
+        $requestService->service = $request->service;
         $requestService->save();
         return true;
     }

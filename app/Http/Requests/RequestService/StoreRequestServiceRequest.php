@@ -21,7 +21,9 @@ class StoreRequestServiceRequest extends FormRequest
     {
         return [
             // 'user_id' => 'required|integer',
-            'message' => 'required|string',
+            'address' => 'required|string',
+            'service' => 'required|string',
+            'phone' => 'required|string',
         ];
     }
 
