@@ -1,6 +1,5 @@
 <?php namespace App\Repositories\RequestService;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
@@ -9,12 +8,10 @@ class RequestServiceRepository implements RequestServiceInterface
 {
     public function store($request)
     {
-        $requestService=new RequestService();
-        $requestService->user_id=$request->user_id;
-        $requestService->message=$request->message;
+        $requestService = new RequestService();
+        $requestService->user_id = $request->get('user')->id;
+        $requestService->message = $request->message;
         $requestService->save();
         return true;
     }
-
-
 }
