@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends BaseController
 {
-    public function update(Request $request)
+    public function requestService(Request $request)
     {
         $user = $request->user();
 

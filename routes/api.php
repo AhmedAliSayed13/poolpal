@@ -9,6 +9,7 @@ use App\Http\Controllers\API\PoolController;
 use App\Http\Controllers\API\Task\TaskController;
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\Test\TestController;
+use App\Http\Controllers\API\RequestService\RequestServiceController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,7 +30,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::POST('test-water', [TestController::class, 'testWater']);
 Route::middleware(['wp.jwt'])->group(function () {
-    Route::put('/profile', [ProfileController::class, 'update']);
+    Route::post('request-service', [RequestServiceController::class, 'store']);
     Route::get('/medias', [MediaController::class, 'index']);
     Route::get('/sidings', [SidingController::class, 'index']);
     Route::apiResource('pools', PoolController::class);
