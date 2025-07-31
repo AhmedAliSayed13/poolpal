@@ -8,6 +8,7 @@ use App\Http\Controllers\API\SidingController;
 use App\Http\Controllers\API\PoolController;
 use App\Http\Controllers\API\Task\TaskController;
 use App\Http\Controllers\API\ProfileController;
+use App\Http\Controllers\API\StripeController;
 use App\Http\Controllers\API\Test\TestController;
 use App\Http\Controllers\API\RequestService\RequestServiceController;
 /*
@@ -42,4 +43,10 @@ Route::middleware(['wp.jwt'])->group(function () {
         'show',
         'index',
     ]);
+
+    Route::post('checkout', [StripeController::class, 'checkout'])->name('checkout');
+
+
 });
+Route::get('checkout/cancel', [StripeController::class, 'paymentCancel'])->name('checkout.cancel');
+Route::get('checkout/success', [StripeController::class, 'paymentSuccess'])->name('checkout.success');
