@@ -81,16 +81,10 @@ class StripeController extends BaseController
                 return $cartData;
             }
 
-            return [
-                'error' => true,
-                'message' => 'فشل في جلب بيانات المستخدم',
-                'status' => $response->status(),
-            ];
+
+            return $this->error('error', 'error in getting user data', $response->status());
         } catch (\Exception $e) {
-            return [
-                'error' => true,
-                'message' => $e->getMessage(),
-            ];
+            return $this->error('error', $e->getMessage(), 500);
         }
     }
 
@@ -100,7 +94,7 @@ class StripeController extends BaseController
         $token = $request->get('token');
 
         if (!$sessionId || !$token) {
-            return '❌ لم يتم الدفع بعد.';
+            return $this->error('error', 'Missing session_id or token', 400);
         }
 
         Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -110,14 +104,13 @@ class StripeController extends BaseController
 
             if ($session && $session->payment_status === 'paid') {
                 return  $this->storeOrder($session, $token);
-                return 'ok1';
 
-                return '✅ تم الدفع بنجاح.';
+                return $this->success('success', 'Payment successful', 200);
             }
 
-            return '❌ لم يتم الدفع بعد.';
+            return $this->error('error', 'Payment failed', 400);
         } catch (\Exception $e) {
-            return '⚠️ خطأ أثناء معالجة الدفع: ' . $e->getMessage();
+            return $this->error('error', $e->getMessage(), 500);
         }
     }
 
@@ -126,17 +119,14 @@ class StripeController extends BaseController
         // // 1. بيانات المستخدم
         $userData = $this->getUserData($token);
         if (!$userData || !isset($userData['data']['ID'])) {
-            return response()->json(
-                ['message' => 'فشل في جلب بيانات المستخدم'],
-                400
-            );
+            return $this->error('error', 'User data not found', 400);
         }
 
         // 2. بيانات السلة
         $cartData = $this->getCart($token);
 
         if (!$cartData || empty($cartData['items'])) {
-            return response()->json(['message' => 'السلة فارغة'], 400);
+            return $this->error('error', 'Cart data not found', 400);
         }
 
 
@@ -178,25 +168,18 @@ class StripeController extends BaseController
 
         // 7. النتيجة
         if ($response->successful()) {
-            return response()->json(
-                [
-                    'message' => '✅ تم إنشاء الطلب بنجاح'
-                ],
-                201
+            return $this->success(
+                'success',
+                'Order created successfully',
+                200
             );
         } else {
-            return response()->json(
-                [
-                    'message' => '❌ فشل في إنشاء الطلب',
-                    'error' => $response->json(),
-                ],
-                $response->status()
-            );
+            return $this->error('error', 'Order creation failed', 400);
         }
     }
 
     public function paymentCancel()
     {
-        return '❌ تم إلغاء الدفع.';
+        return $this->error('error', 'Payment canceled', 400);
     }
 }
