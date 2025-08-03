@@ -62,6 +62,11 @@ class AuthController extends BaseController
                 'meta_key' => 'billing_phone', // أو 'phone' لو مش WooCommerce
                 'meta_value' => $request->phone,
             ],
+            [
+                'user_id' => $user->ID,
+                'meta_key' => 'fcm_token', //save fcm_token
+                'meta_value' => $request->fcm_token,
+            ],
         ]);
 
         DB::commit();
@@ -73,19 +78,22 @@ class AuthController extends BaseController
         if (!$response->successful()) {
             $errorMessage = $response->body(); // Full raw response body
             $statusCode = $response->status(); // HTTP status code
-            Log::channel('slack')->error('error in register user generate token from wp', [
-                'user_id' => auth()->id(),
-                'route' => request()->path(),
-                'message' => $errorMessage,
-            ]);
-
+            Log::channel('slack')->error(
+                'error in register user generate token from wp',
+                [
+                    'user_id' => auth()->id(),
+                    'route' => request()->path(),
+                    'message' => $errorMessage,
+                ]
+            );
         }
-
 
         return $this->success(
             [
                 'user' => $user->refresh(),
-                'token' => isset($response->json()['token']) ? $response->json()['token'] : null,
+                'token' => isset($response->json()['token'])
+                    ? $response->json()['token']
+                    : null,
             ],
             'User registered successfully'
         );
@@ -113,7 +121,18 @@ class AuthController extends BaseController
         ]);
 
         if ($response->successful()) {
+
             $user = User::where('user_login', $request->email)->first();
+
+            // save fcm_token
+             DB::table('Lubpo8Jc8_usermeta')->insert([
+                [
+                    'user_id' => $user->ID,
+                    'meta_key' => 'fcm_token', //save fcm_token
+                    'meta_value' => $request->fcm_token,
+                ],
+            ]);
+            
             return $this->success(
                 [
                     'user' => $user,
@@ -121,14 +140,17 @@ class AuthController extends BaseController
                 ],
                 'Login successful'
             );
-        }else{
+        } else {
             $errorMessage = $response->body(); // Full raw response body
             $statusCode = $response->status(); // HTTP status code
-            Log::channel('slack')->error('error in login user generate token from wp', [
-                'user_id' => auth()->id(),
-                'route' => request()->path(),
-                'message' => $errorMessage,
-            ]);
+            Log::channel('slack')->error(
+                'error in login user generate token from wp',
+                [
+                    'user_id' => auth()->id(),
+                    'route' => request()->path(),
+                    'message' => $errorMessage,
+                ]
+            );
         }
 
         return $this->error('Invalid credentials', [], 403);
