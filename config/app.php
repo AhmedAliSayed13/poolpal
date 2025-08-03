@@ -196,7 +196,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         // Repository provider
         App\Providers\RepositoryServiceProvider::class,
-        eloquentFilter\ServiceProvider::class
+        eloquentFilter\ServiceProvider::class,
+        Kreait\Laravel\Firebase\ServiceProvider::class,
 
     ],
 

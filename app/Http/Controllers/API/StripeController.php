@@ -9,6 +9,10 @@ use App\Http\Controllers\API\BaseController;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use Stripe\Checkout\Session as StripeSession;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+use Kreait\Laravel\Firebase\Facades\Firebase;
+use App\Helpers\FirebaseNotification;
 class StripeController extends BaseController
 {
     public function checkout(Request $request)
@@ -40,7 +44,11 @@ class StripeController extends BaseController
             'payment_method_types' => ['card'],
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}' . '&token=' . $token,
+            'success_url' =>
+                route('checkout.success') .
+                '?session_id={CHECKOUT_SESSION_ID}' .
+                '&token=' .
+                $token,
             'cancel_url' => route('checkout.cancel'),
         ]);
 
@@ -81,8 +89,11 @@ class StripeController extends BaseController
                 return $cartData;
             }
 
-
-            return $this->error('error', 'error in getting user data', $response->status());
+            return $this->error(
+                'error',
+                'error in getting user data',
+                $response->status()
+            );
         } catch (\Exception $e) {
             return $this->error('error', $e->getMessage(), 500);
         }
@@ -103,7 +114,7 @@ class StripeController extends BaseController
             $session = StripeSession::retrieve($sessionId);
 
             if ($session && $session->payment_status === 'paid') {
-                return  $this->storeOrder($session, $token);
+                return $this->storeOrder($session, $token);
 
                 return $this->success('success', 'Payment successful', 200);
             }
@@ -129,7 +140,6 @@ class StripeController extends BaseController
             return $this->error('error', 'Cart data not found', 400);
         }
 
-
         // 3. تحويل عناصر السلة إلى line_items
         $lineItems = [];
 
@@ -142,10 +152,8 @@ class StripeController extends BaseController
             ];
         }
 
-
         // 4. الشحن
         $shippingLines = [];
-
 
         // 5. تجهيز الطلب النهائي
         $order = [
@@ -161,18 +169,17 @@ class StripeController extends BaseController
 
         // 6. إرسال الطلب إلى WooCommerce
         $response = Http::post(
-            env('WEBSITE_URL') . '/wp-json/wc/v3/orders?consumer_key=' . env('WOOCOMMERCE_KEY') . '&consumer_secret=' . env('WOOCOMMERCE_SECRET'),
+            env('WEBSITE_URL') .
+                '/wp-json/wc/v3/orders?consumer_key=' .
+                env('WOOCOMMERCE_KEY') .
+                '&consumer_secret=' .
+                env('WOOCOMMERCE_SECRET'),
             $order
-            );
-
+        );
 
         // 7. النتيجة
         if ($response->successful()) {
-            return $this->success(
-                'success',
-                'Order created successfully',
-                200
-            );
+            return $this->success('success', 'Order created successfully', 200);
         } else {
             return $this->error('error', 'Order creation failed', 400);
         }
@@ -181,5 +188,26 @@ class StripeController extends BaseController
     public function paymentCancel()
     {
         return $this->error('error', 'Payment canceled', 400);
+    }
+
+    public function sendNotification(Request $request)
+    {
+        $request->validate([
+            'token' => 'required|string',
+            'title' => 'required|string',
+            'body'  => 'required|string',
+        ]);
+
+        try {
+            $response = FirebaseNotification::sendNotification(
+                $request->input('token'),
+                $request->input('title'),
+                $request->input('body')
+            );
+
+            return response()->json(['message' => 'Notification sent!', 'firebase_response' => $response]);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

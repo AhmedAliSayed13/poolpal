@@ -50,10 +50,8 @@ Route::middleware(['wp.jwt'])->group(function () {
         'checkout'
     );
 });
-Route::get('checkout/cancel', [StripeController::class, 'paymentCancel'])->name(
-    'checkout.cancel'
-);
-Route::get('checkout/success', [
-    StripeController::class,
-    'paymentSuccess',
-])->name('checkout.success');
+Route::get('checkout/cancel', [StripeController::class, 'paymentCancel'])->name('checkout.cancel');
+Route::get('checkout/success', [StripeController::class,'paymentSuccess'])->name('checkout.success');
+
+Route::post('notification', [StripeController::class,'sendNotification'])->name('notification');
+
