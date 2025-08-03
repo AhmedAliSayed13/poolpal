@@ -9,6 +9,8 @@ use App\Repositories\task\TaskInterface;
 use App\Repositories\task\TaskRepository;
 use App\Repositories\RequestService\RequestServiceInterface;
 use App\Repositories\RequestService\RequestServiceRepository;
+use App\Repositories\slider\SliderInterface;
+use App\Repositories\slider\SliderRepository;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -45,6 +47,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             RequestServiceInterface::class,
             RequestServiceRepository::class
+        );
+        // Slider
+        $this->app->bind(
+            SliderInterface::class,
+            SliderRepository::class
         );
 
 
