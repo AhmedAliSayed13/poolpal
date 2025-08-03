@@ -50,6 +50,7 @@ Route::middleware(['wp.jwt'])->group(function () {
         'checkout'
     );
 });
+
 Route::get('checkout/cancel', [StripeController::class, 'paymentCancel'])->name('checkout.cancel');
 Route::get('checkout/success', [StripeController::class,'paymentSuccess'])->name('checkout.success');
 

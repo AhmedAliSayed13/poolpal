@@ -192,12 +192,9 @@ class StripeController extends BaseController
 
     public function sendNotification(Request $request)
     {
-        $request->validate([
-            'token' => 'required|string',
-            'title' => 'required|string',
-            'body'  => 'required|string',
-        ]);
 
+
+// return 123;
         try {
             $response = FirebaseNotification::sendNotification(
                 $request->input('token'),
