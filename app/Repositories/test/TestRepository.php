@@ -137,37 +137,46 @@ class TestRepository implements TestInterface
                 'https://techroute66.app.n8n.cloud/webhook/analyze-test-strip'
             );
 
+        return $response->json();
 
 
-            if (isset($response['error'])) {
 
-                return [
-                    'status' => false,
-                    'message' => $response['error'],
-                ];
-            }
+            // if (isset($response['error'])) {
 
-            if (isset($response['results'])) {
-                // Process and return the pool test results
-                return[
-                    'status' => true,
-                    'data' => $response->json(),
-                ];
-            }
+            //     return [
+            //         'status' => false,
+            //         'message' => $response['error'],
+            //     ];
+            // }
 
-            // Fallback
-            return [
-                'status' => false,
-                'message' => 'An error occurred',
-            ];
+            // if (isset($response['results'])) {
+            //     // Process and return the pool test results
+            //     return[
+            //         'status' => true,
+            //         'data' => $response->json(),
+            //     ];
+            // }
 
-            // return $response->body();
+
+            // return [
+            //     'status' => false,
+            //     'message' => 'An error occurred',
+            // ];
+
+
         }
 
-        return [
-            'status' => false,
-            'message' => 'Image not found',
-        ];
+        // return [
+        //     'status' => false,
+        //     'message' => 'Image not found',
+        // ];
+
+        return response()->json(
+            [
+                'message' => 'No image uploaded',
+            ],
+            400
+        );
     }
     public function SaveTasks($test,$actions)
     {
