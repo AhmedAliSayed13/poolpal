@@ -125,6 +125,7 @@ class TestRepository implements TestInterface
     public function testWater($request)
     {
 
+        if ($request->hasFile('test_strip')) {
             $image = $request->file('test_strip');
 
             $response = Http::attach(
@@ -134,30 +135,16 @@ class TestRepository implements TestInterface
             )->post(
                 'https://techroute66.app.n8n.cloud/webhook/analyze-test-strip'
             );
-            $response = json_decode($response, true);
 
-            if (isset($response['error'])) {
-                return [
-                    'status' => false,
-                    'message' => $response['error'],
-                    'data' => null,
-                ];
-            } elseif (isset($response['results'])) {
-                return [
-                    'status' => true,
-                    'message' => 'Data retrieved successfully',
-                    'data' => $response, // ✅ هنا الصحيح
-                ];
-            } else {
-                return [
-                    'status' => false,
-                    'message' => 'An error occurred',
-                    'data' => null,
-                ];
-            }
+            return $response->json();
+        }
 
-
-
+        return response()->json(
+            [
+                'message' => 'No image uploaded',
+            ],
+            400
+        );
     }
     public function SaveTasks($test, $actions)
     {
