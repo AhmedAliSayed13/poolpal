@@ -114,8 +114,8 @@ class StripeController extends BaseController
             $session = StripeSession::retrieve($sessionId);
 
             if ($session && $session->payment_status === 'paid') {
-                return $this->storeOrder($session, $token);
-
+                $this->storeOrder($session, $token);
+                $this->clearCart($token);
                 return $this->success('success', 'Payment successful', 200);
             }
 
@@ -207,4 +207,27 @@ class StripeController extends BaseController
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function clearCart($token)
+    {
+
+            $client = new Client();
+
+            $response = $client->request(
+                'POST',
+                env('WEBSITE_URL') . '/wp-json/cocart/v2/cart/clear',
+                [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                        'Accept' => 'application/json',
+                    ],
+                ]
+            );
+
+            $result = json_decode($response->getBody(), true);
+
+            return $result;
+
+    }
+
 }
