@@ -28,7 +28,8 @@ class TestController extends BaseController
 
 
         if(isset($result['status']) && $result['status'] == true ){
-            return $this->success($result['data'], 'Data retrieved successfully', 200);
+            $data=json_encode($result['data'],JSON_PRETTY_PRINT);
+            return $this->success($data, 'Data retrieved successfully', 200);
         }
         return $this->error($result['message'], $result['message'], 400);
     }
