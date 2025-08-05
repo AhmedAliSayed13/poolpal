@@ -31,7 +31,7 @@ class TestController extends BaseController
 
         // return $this->success($result['data'], 'Data retrieved successfully');
 
-        return $this->success($data, 'Data retrieved successfully');
+        return $this->success($result, 'Data retrieved successfully');
     }
 
     public function index(Request $request)
