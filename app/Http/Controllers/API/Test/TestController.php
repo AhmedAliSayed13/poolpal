@@ -24,9 +24,13 @@ class TestController extends BaseController
     public function testWater(MakeTestRequest $request)
     {
 
-        $data = $this->testInterface->testWater($request);
-        // return  $data;
-        return $this->success($data, 'Data retrieved successfully');
+        $result = $this->testInterface->testWater($request);
+
+
+        if(isset($result['status']) && $result['status'] == true ){
+            return $this->success($result['data'], 'Data retrieved successfully', 200);
+        }
+        return $this->error($result['message'], $result['message'], 400);
     }
 
     public function index(Request $request)

@@ -102,7 +102,7 @@ class TestRepository implements TestInterface
 
             $test->image = $imageName;
         }
-        $test->save();
+        // $test->save();
         if ($request->has('action_items')) {
             $test->action_items = json_decode($request->action_items, true);
         }
@@ -128,15 +128,32 @@ class TestRepository implements TestInterface
         if ($request->hasFile('test_strip')) {
             $image = $request->file('test_strip');
 
-            $response = Http::attach(
-                'test_strip',
-                fopen($image->getRealPath(), 'r'),
-                $image->getClientOriginalName()
-            )->post(
-                'https://techroute66.app.n8n.cloud/webhook/analyze-test-strip'
-            );
+            $response = Http::attach('test_strip',fopen($image->getRealPath(), 'r'),$image->getClientOriginalName())->post('https://techroute66.app.n8n.cloud/webhook/analyze-test-strip');
 
-            return $response->json();
+            if ($response->successful()) {
+
+                $data = json_decode($response, true);
+
+                if (isset($data['results'])) {
+                    return [
+                        'status' => true,
+                        'message' => 'Data retrieved successfully',
+                        'data' => $data,
+                    ];
+                }elseif(isset($data['error'])){
+                    return [
+                        'status' => false,
+                        'message' => $data['error'],
+                        'data' => null,
+                    ];
+                }
+            }else{
+                return [
+                    'status' => false,
+                    'message' => $response->body(),
+                    'data' => null,
+                ];
+            }
         }
 
         return response()->json(
