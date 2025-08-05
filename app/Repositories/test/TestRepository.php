@@ -102,7 +102,7 @@ class TestRepository implements TestInterface
 
             $test->image = $imageName;
         }
-        $test->save();
+        // $test->save();
         if ($request->has('action_items')) {
             $test->action_items = json_decode($request->action_items, true);
 
@@ -171,14 +171,16 @@ class TestRepository implements TestInterface
     }
     public function SaveTasks($test,$actions)
     {
-        foreach ($actions as $action) {
-            foreach ($action['steps'] as $stepItem) {
-            $task = new Task();
-            $task->user_id = $test->user_id;
-            $task->test_id = $test->id;
-            $task->pool_id = $test->pool_id;
-            $task->title = $stepItem;
-            $task->save();
+        if(is_array($actions) && count($actions) > 0){
+            foreach ($actions as $action) {
+                foreach ($action['steps'] as $stepItem) {
+                $task = new Task();
+                $task->user_id = $test->user_id;
+                $task->test_id = $test->id;
+                $task->pool_id = $test->pool_id;
+                $task->title = $stepItem;
+                $task->save();
+                }
             }
         }
     }
