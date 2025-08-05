@@ -194,7 +194,7 @@ class StripeController extends BaseController
     {
 
 
-// return 123;
+
         try {
             $response = FirebaseNotification::sendNotification(
                 $request->input('token'),

@@ -125,14 +125,16 @@ class AuthController extends BaseController
             $user = User::where('user_login', $request->email)->first();
 
             // save fcm_token
-             DB::table('Lubpo8Jc8_usermeta')->insert([
+             DB::table('Lubpo8Jc8_usermeta')->updateOrInsert(
                 [
                     'user_id' => $user->ID,
-                    'meta_key' => 'fcm_token', //save fcm_token
-                    'meta_value' => $request->fcm_token,
+                    'meta_key' => 'fcm_token',
                 ],
-            ]);
-            
+                [
+                    'meta_value' => $request->fcm_token,
+                ]
+            );
+
             return $this->success(
                 [
                     'user' => $user,
