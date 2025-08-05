@@ -25,13 +25,12 @@ class TestController extends BaseController
     {
 
         $result = $this->testInterface->testWater($request);
-        // if(isset($result['status']) && $result['status'] == false){
-        //     return $this->error($result['message'],$result['message'],400);
-        // }
 
-        // return $this->success($result['data'], 'Data retrieved successfully');
+        if(isset($result['status']) && $result['status'] == false){
+            return $this->error($result['message'],$result['message'],400);
+        }
 
-        return $this->success($result, 'Data retrieved successfully');
+        return $this->success($result['data'], 'Data retrieved successfully',200);
     }
 
     public function index(Request $request)

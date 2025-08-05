@@ -44,11 +44,11 @@ class TestRepository implements TestInterface
     }
     public function index($request)
     {
-
-        $tests = Test::AcceptRequest(getFillableSort('Test'))->where('user_id', $request->get('user')->id)
-        ->filter()
-        ->with(['pool', 'poolWaterStatus'])
-        ->get();
+        $tests = Test::AcceptRequest(getFillableSort('Test'))
+            ->where('user_id', $request->get('user')->id)
+            ->filter()
+            ->with(['pool', 'poolWaterStatus'])
+            ->get();
         return $tests;
     }
 
@@ -105,10 +105,9 @@ class TestRepository implements TestInterface
         // $test->save();
         if ($request->has('action_items')) {
             $test->action_items = json_decode($request->action_items, true);
-
         }
         $test->save();
-        $this->SaveTasks($test,$test->action_items);
+        $this->SaveTasks($test, $test->action_items);
         return $test->refresh();
     }
     public function show($request, $id)
@@ -126,7 +125,6 @@ class TestRepository implements TestInterface
     public function testWater($request)
     {
 
-        if ($request->hasFile('test_strip')) {
             $image = $request->file('test_strip');
 
             $response = Http::attach(
@@ -136,59 +134,42 @@ class TestRepository implements TestInterface
             )->post(
                 'https://techroute66.app.n8n.cloud/webhook/analyze-test-strip'
             );
+            $response = json_decode($response, true);
 
-        return $response->json();
-
-
-
-            // if (isset($response['error'])) {
-
-            //     return [
-            //         'status' => false,
-            //         'message' => $response['error'],
-            //     ];
-            // }
-
-            // if (isset($response['results'])) {
-            //     // Process and return the pool test results
-            //     return[
-            //         'status' => true,
-            //         'data' => $response->json(),
-            //     ];
-            // }
-
-
-            // return [
-            //     'status' => false,
-            //     'message' => 'An error occurred',
-            // ];
+            if (isset($response['error'])) {
+                return [
+                    'status' => false,
+                    'message' => $response['error'],
+                    'data' => null,
+                ];
+            } elseif (isset($response['results'])) {
+                return [
+                    'status' => true,
+                    'message' => 'Data retrieved successfully',
+                    'data' => $response, // ✅ هنا الصحيح
+                ];
+            } else {
+                return [
+                    'status' => false,
+                    'message' => 'An error occurred',
+                    'data' => null,
+                ];
+            }
 
 
-        }
 
-        // return [
-        //     'status' => false,
-        //     'message' => 'Image not found',
-        // ];
-
-        return response()->json(
-            [
-                'message' => 'No image uploaded',
-            ],
-            400
-        );
     }
-    public function SaveTasks($test,$actions)
+    public function SaveTasks($test, $actions)
     {
-        if(is_array($actions) && count($actions) > 0){
+        if (is_array($actions) && count($actions) > 0) {
             foreach ($actions as $action) {
                 foreach ($action['steps'] as $stepItem) {
-                $task = new Task();
-                $task->user_id = $test->user_id;
-                $task->test_id = $test->id;
-                $task->pool_id = $test->pool_id;
-                $task->title = $stepItem;
-                $task->save();
+                    $task = new Task();
+                    $task->user_id = $test->user_id;
+                    $task->test_id = $test->id;
+                    $task->pool_id = $test->pool_id;
+                    $task->title = $stepItem;
+                    $task->save();
                 }
             }
         }
