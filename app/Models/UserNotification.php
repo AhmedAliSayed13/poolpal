@@ -13,4 +13,8 @@ class UserNotification extends Model
 
     protected $guarded = [];
     protected $fillable = ['user_id', 'title', 'body', 'data', 'view'];
+
+    protected $casts = [
+    'data' => 'array',
+];
 }
