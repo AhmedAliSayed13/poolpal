@@ -193,11 +193,11 @@ class StripeController extends BaseController
     public function sendNotification(Request $request)
     {
 
-
+        // return $request->all();
 
         try {
             $response = FirebaseNotification::sendNotification(
-                $request->input('token'),
+                $request->input('fcm_token'),
                 $request->input('title'),
                 $request->input('body')
             );
