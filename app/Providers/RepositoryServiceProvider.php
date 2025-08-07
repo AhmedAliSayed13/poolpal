@@ -11,6 +11,8 @@ use App\Repositories\RequestService\RequestServiceInterface;
 use App\Repositories\RequestService\RequestServiceRepository;
 use App\Repositories\slider\SliderInterface;
 use App\Repositories\slider\SliderRepository;
+use App\Repositories\notification\NotificationInterface;
+use App\Repositories\notification\NotificationRepository;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -52,6 +54,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             SliderInterface::class,
             SliderRepository::class
+        );
+        // notification
+        $this->app->bind(
+            NotificationInterface::class,
+            NotificationRepository::class
         );
 
 

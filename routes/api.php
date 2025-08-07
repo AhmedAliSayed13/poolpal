@@ -11,6 +11,7 @@ use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\StripeController;
 use App\Http\Controllers\API\Test\TestController;
 use App\Http\Controllers\API\slider\SliderController;
+use App\Http\Controllers\API\notification\NotificationController;
 use App\Http\Controllers\API\RequestService\RequestServiceController;
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,11 @@ Route::middleware(['wp.jwt'])->group(function () {
     ]);
     Route::apiResource('sliders', SliderController::class);
 
+    Route::apiResource('notifications', NotificationController::class)->only([
+        'index',
+        'show'
+    ]);
+
     Route::post('checkout', [StripeController::class, 'checkout'])->name(
         'checkout'
     );
@@ -54,6 +60,6 @@ Route::middleware(['wp.jwt'])->group(function () {
 Route::get('checkout/cancel', [StripeController::class, 'paymentCancel'])->name('checkout.cancel');
 Route::get('checkout/success', [StripeController::class,'paymentSuccess'])->name('checkout.success');
 
-Route::post('notification', [StripeController::class,'sendNotification'])->name('notification');
-Route::post('notification/many', [StripeController::class,'sendNotificationMany'])->name('notificationMany');
+Route::post('admin/notification', [StripeController::class,'sendNotification'])->name('notification');
+Route::post('admin/notification/many', [StripeController::class,'sendNotificationMany'])->name('notificationMany');
 
