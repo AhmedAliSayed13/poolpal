@@ -1,40 +1,37 @@
 <?php
-
 namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
-use Stripe\Stripe;
-use Stripe\Checkout\Session;
+use App\Helpers\FirebaseNotification;
 use App\Http\Controllers\API\BaseController;
 use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Stripe\Checkout\Session as StripeSession;
-use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\Notification;
-use Kreait\Laravel\Firebase\Facades\Firebase;
-use App\Helpers\FirebaseNotification;
+use Stripe\Stripe;
+
 class StripeController extends BaseController
 {
     public function checkout(Request $request)
     {
-        $token = $request->bearerToken();
+        $token    = $request->bearerToken();
         $cartData = $this->getCart($token);
 
         $lineItems = [];
         foreach ($cartData['items'] as $item) {
             $productName = $item['name'];
-            $unitAmount = (int) $item['price'];
-            $quantity = (int) $item['quantity']['value'];
+            $unitAmount  = (int) $item['price'];
+            $quantity    = (int) $item['quantity']['value'];
 
             $lineItems[] = [
                 'price_data' => [
-                    'currency' => 'usd', // ✅ تم التغيير هنا
+                    'currency'     => 'usd', // ✅ تم التغيير هنا
                     'product_data' => [
                         'name' => $productName,
                     ],
-                    'unit_amount' => $unitAmount,
+                    'unit_amount'  => $unitAmount,
                 ],
-                'quantity' => $quantity,
+                'quantity'   => $quantity,
             ];
         }
 
@@ -42,14 +39,14 @@ class StripeController extends BaseController
 
         $session = StripeSession::create([
             'payment_method_types' => ['card'],
-            'line_items' => $lineItems,
-            'mode' => 'payment',
-            'success_url' =>
-                route('checkout.success') .
-                '?session_id={CHECKOUT_SESSION_ID}' .
-                '&token=' .
-                $token,
-            'cancel_url' => route('checkout.cancel'),
+            'line_items'           => $lineItems,
+            'mode'                 => 'payment',
+            'success_url'          =>
+            route('checkout.success') .
+            '?session_id={CHECKOUT_SESSION_ID}' .
+            '&token=' .
+            $token,
+            'cancel_url'           => route('checkout.cancel'),
         ]);
 
         return $this->success(
@@ -60,14 +57,14 @@ class StripeController extends BaseController
 
     public function getCart($token)
     {
-        $client = new Client();
+        $client   = new Client();
         $response = $client->request(
             'GET',
             env('WEBSITE_URL') . '/wp-json/cocart/v2/cart',
             [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token, // لو الكارت مربوط بالمستخدم
-                    'Accept' => 'application/json',
+                    'Accept'        => 'application/json',
                 ],
             ]
         );
@@ -102,9 +99,9 @@ class StripeController extends BaseController
     public function paymentSuccess(Request $request)
     {
         $sessionId = $request->get('session_id');
-        $token = $request->get('token');
+        $token     = $request->get('token');
 
-        if (!$sessionId || !$token) {
+        if (! $sessionId || ! $token) {
             return $this->error('error', 'Missing session_id or token', 400);
         }
 
@@ -129,14 +126,14 @@ class StripeController extends BaseController
     {
         // // 1. بيانات المستخدم
         $userData = $this->getUserData($token);
-        if (!$userData || !isset($userData['data']['ID'])) {
+        if (! $userData || ! isset($userData['data']['ID'])) {
             return $this->error('error', 'User data not found', 400);
         }
 
         // 2. بيانات السلة
         $cartData = $this->getCart($token);
 
-        if (!$cartData || empty($cartData['items'])) {
+        if (! $cartData || empty($cartData['items'])) {
             return $this->error('error', 'Cart data not found', 400);
         }
 
@@ -145,10 +142,10 @@ class StripeController extends BaseController
 
         foreach ($cartData['items'] as $item) {
             $lineItems[] = [
-                'product_id' =>
-                    $item['meta']['variation']['parent_id'] ?? $item['id'],
+                'product_id'   =>
+                $item['meta']['variation']['parent_id'] ?? $item['id'],
                 'variation_id' => $item['id'], // في حالة المنتج متغير
-                'quantity' => $item['quantity']['value'],
+                'quantity'     => $item['quantity']['value'],
             ];
         }
 
@@ -157,23 +154,23 @@ class StripeController extends BaseController
 
         // 5. تجهيز الطلب النهائي
         $order = [
-            'customer_id' => $userData['data']['ID'],
-            'payment_method' => 'cod', // أو stripe
+            'customer_id'          => $userData['data']['ID'],
+            'payment_method'       => 'cod', // أو stripe
             'payment_method_title' => 'Cash on Delivery',
-            'set_paid' => true,
-            'billing' => $userData['data']['billing'],
-            'shipping' => $userData['data']['shipping'],
-            'line_items' => $lineItems,
-            'shipping_lines' => $shippingLines,
+            'set_paid'             => true,
+            'billing'              => $userData['data']['billing'],
+            'shipping'             => $userData['data']['shipping'],
+            'line_items'           => $lineItems,
+            'shipping_lines'       => $shippingLines,
         ];
 
         // 6. إرسال الطلب إلى WooCommerce
         $response = Http::post(
             env('WEBSITE_URL') .
-                '/wp-json/wc/v3/orders?consumer_key=' .
-                env('WOOCOMMERCE_KEY') .
-                '&consumer_secret=' .
-                env('WOOCOMMERCE_SECRET'),
+            '/wp-json/wc/v3/orders?consumer_key=' .
+            env('WOOCOMMERCE_KEY') .
+            '&consumer_secret=' .
+            env('WOOCOMMERCE_SECRET'),
             $order
         );
 
@@ -193,13 +190,37 @@ class StripeController extends BaseController
     public function sendNotification(Request $request)
     {
 
-        // return $request->all();
+        $fcm_token = DB::table('Lubpo8Jc8_usermeta as um')
+            ->join('Lubpo8Jc8_users as u', 'u.ID', '=', 'um.user_id')
+            ->where('u.user_email', $request->input('email'))
+            ->where('um.meta_key', 'fcm_token')
+            ->value('um.meta_value');
 
         try {
+            if (! $fcm_token) {
+                return response()->json(['error' => 'fcm_token not found'], 500);
+            }
             $response = FirebaseNotification::sendNotification(
-                $request->input('fcm_token'),
+                $fcm_token,
                 $request->input('title'),
-                $request->input('body')
+                $request->input('body'), $request
+            );
+
+            return response()->json(['message' => 'Notification sent!', 'firebase_response' => $response]);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    public function sendNotificationMany(Request $request)
+    {
+
+        
+
+        try {
+            $response = FirebaseNotification::sendNotificationToMany(
+
+                $request->input('title'),
+                $request->input('body'), $request
             );
 
             return response()->json(['message' => 'Notification sent!', 'firebase_response' => $response]);
@@ -211,23 +232,25 @@ class StripeController extends BaseController
     public function clearCart($token)
     {
 
-            $client = new Client();
+        $client = new Client();
 
-            $response = $client->request(
-                'POST',
-                env('WEBSITE_URL') . '/wp-json/cocart/v2/cart/clear',
-                [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $token,
-                        'Accept' => 'application/json',
-                    ],
-                ]
-            );
+        $response = $client->request(
+            'POST',
+            env('WEBSITE_URL') . '/wp-json/cocart/v2/cart/clear',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Accept'        => 'application/json',
+                ],
+            ]
+        );
 
-            $result = json_decode($response->getBody(), true);
+        $result = json_decode($response->getBody(), true);
 
-            return $result;
+        return $result;
 
     }
+
+
 
 }

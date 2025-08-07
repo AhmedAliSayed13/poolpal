@@ -55,4 +55,5 @@ Route::get('checkout/cancel', [StripeController::class, 'paymentCancel'])->name(
 Route::get('checkout/success', [StripeController::class,'paymentSuccess'])->name('checkout.success');
 
 Route::post('notification', [StripeController::class,'sendNotification'])->name('notification');
+Route::post('notification/many', [StripeController::class,'sendNotificationMany'])->name('notificationMany');
 
