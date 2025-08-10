@@ -30,6 +30,9 @@ Route::middleware('wp.jwt')->get('/user', function (Request $request) {
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot.password');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password');
+
 
 Route::POST('test-water', [TestController::class, 'testWater']);
 Route::middleware(['wp.jwt'])->group(function () {

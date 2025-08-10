@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\Auth\ForgetPasswordRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
+use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
+use App\Mail\ResetPasswordCodeMail;
 class AuthController extends BaseController
 {
     public function register(Request $request)
@@ -156,5 +161,56 @@ class AuthController extends BaseController
         }
 
         return $this->error('Invalid credentials', [], 403);
+    }
+    public function forgotPassword(ForgetPasswordRequest $request)
+    {
+
+        $code = rand(100000, 999999);
+
+        DB::table('password_resets')->updateOrInsert(
+            ['email' => $request->email],
+            [
+                'code' => $code,
+                'created_at' => Carbon::now()
+            ]
+        );
+        Mail::to($request->email)->send(new ResetPasswordCodeMail($code));
+        return $this->success(
+            [],
+            'Reset password code sent to your email'
+        );
+    }
+    public function ResetPassword(ResetPasswordRequest $request)
+    {
+
+        $reset = DB::table('password_resets')
+            ->where('email', $request->email)
+            ->where('code', $request->code)
+            ->first();
+
+        if (!$reset) {
+            return $this->error(
+                'Invalid reset code or email',
+                [],
+                422
+            );
+
+        }
+
+        // Include WordPress password hasher
+        require_once base_path(env('WP_PASSWORD_HASH_PATH'));
+        $wp_hasher = new \PasswordHash(8, true);
+        $hashed_password = $wp_hasher->HashPassword($request->password);
+
+        User::where('user_email', $request->email)->update([
+            'user_pass' => $hashed_password,
+        ]);
+
+        // return response()->json(['status' => true, 'message' => 'Password reset successfully']);
+        return
+            $this->success(
+                [],
+                'Password reset successfully'
+            );
     }
 }
