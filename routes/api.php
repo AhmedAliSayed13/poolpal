@@ -33,6 +33,9 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::POST('test-water', [TestController::class, 'testWater']);
 Route::middleware(['wp.jwt'])->group(function () {
+    Route::get('about', [RequestServiceController::class, 'about']);
+    Route::get('contact', [RequestServiceController::class, 'contact']);
+    Route::get('privacy', [RequestServiceController::class, 'privacy']);
     Route::post('request-service', [RequestServiceController::class, 'store']);
     Route::get('/medias', [MediaController::class, 'index']);
     Route::get('/sidings', [SidingController::class, 'index']);

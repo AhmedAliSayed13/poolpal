@@ -23,4 +23,20 @@ class RequestServiceController extends BaseController
         $data = $this->requestServiceInterface->store($request);
         return $this->success($data, 'Data stored successfully');
     }
+    public function about()
+    {
+        $data = $this->requestServiceInterface->about();
+        return $this->success($data, 'Data stored successfully');
+    }
+    public function contact()
+    {
+        $data = $this->requestServiceInterface->contact();
+        return $this->success($data, 'Data stored successfully');
+    }
+    public function privacy()
+    {
+        $data = $this->requestServiceInterface->privacy();
+        return $this->success($data, 'Data stored successfully');
+    }
+
 }
