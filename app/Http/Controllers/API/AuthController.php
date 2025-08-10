@@ -183,30 +183,22 @@ class AuthController extends BaseController
     public function ResetPassword(ResetPasswordRequest $request)
     {
 
-        $reset = DB::table('password_resets')
-            ->where('email', $request->email)
-            ->where('code', $request->code)
-            ->first();
+        $reset = DB::table('password_resets')->where('email', $request->email)->where('code', $request->code)->first();
 
         if (!$reset) {
-            return $this->error(
-                'Invalid reset code or email',
-                [],
-                422
-            );
-
+            return $this->error('Invalid reset code or email',[],422);
         }
 
-        // Include WordPress password hasher
-        require_once base_path(env('WP_PASSWORD_HASH_PATH'));
-        $wp_hasher = new \PasswordHash(8, true);
-        $hashed_password = $wp_hasher->HashPassword($request->password);
 
-        User::where('user_email', $request->email)->update([
-            'user_pass' => $hashed_password,
+        if (Carbon::parse($reset->created_at)->addMinutes(30)->isPast()) {
+            return $this->error('Reset code has expired', [], 422);
+        }
+
+        $response = Http::post(env('ENDPOINT_CHANGE_PASSWORD'), [
+            'email' => $request->email,
+            'new_password' => $request->password,
         ]);
 
-        // return response()->json(['status' => true, 'message' => 'Password reset successfully']);
         return
             $this->success(
                 [],
