@@ -199,10 +199,11 @@ class AuthController extends BaseController
             'Content-Type' => 'application/json'
         ])->post(env('ENDPOINT_CHANGE_PASSWORD'), [
             'email'        => $request->email,
-            'new_password' => $request->password,
+            'new_password' => $request->new_password,
         ]);
 
-        
+
+
         return
             $this->success(
                 [],
