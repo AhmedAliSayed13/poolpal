@@ -194,11 +194,15 @@ class AuthController extends BaseController
             return $this->error('Reset code has expired', [], 422);
         }
 
-        $response = Http::post(env('ENDPOINT_CHANGE_PASSWORD'), [
-            'email' => $request->email,
+        $response = Http::withHeaders([
+            'x-api-key'    => env('WORDPRESS_API_KEY'),
+            'Content-Type' => 'application/json'
+        ])->post(env('ENDPOINT_CHANGE_PASSWORD'), [
+            'email'        => $request->email,
             'new_password' => $request->password,
         ]);
 
+        
         return
             $this->success(
                 [],
