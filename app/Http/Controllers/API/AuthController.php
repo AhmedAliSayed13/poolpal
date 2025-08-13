@@ -12,6 +12,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Auth\ForgetPasswordRequest;
+use App\Http\Requests\Auth\CheckCodedRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -180,19 +181,40 @@ class AuthController extends BaseController
             'Reset password code sent to your email'
         );
     }
-    public function ResetPassword(ResetPasswordRequest $request)
+    public function checkCode(CheckCodedRequest $request)
     {
 
-        $reset = DB::table('password_resets')->where('email', $request->email)->where('code', $request->code)->first();
+        $reset = DB::table('password_resets')
+            ->where('email', $request->email)
+            ->where('code', $request->code)
+            ->first();
 
         if (!$reset) {
             return $this->error('Invalid reset code or email',[],422);
         }
 
-
         if (Carbon::parse($reset->created_at)->addMinutes(30)->isPast()) {
             return $this->error('Reset code has expired', [], 422);
         }
+
+        return $this->success(
+            [],
+            'Reset code is valid, you can proceed to reset your password'
+        );
+    }
+    public function ResetPassword(ResetPasswordRequest $request)
+    {
+
+
+
+        $reset = DB::table('password_resets')
+            ->where('email', $request->email)
+            ->first();
+            
+        if (!$reset) {
+            return $this->error('No reset request found for this email', [], 422);
+        }
+
 
         $response = Http::withHeaders([
             'x-api-key'    => env('WORDPRESS_API_KEY'),
