@@ -49,7 +49,7 @@ class TestRepository implements TestInterface
             ->filter()
             ->with(['pool', 'poolWaterStatus'])
             ->orderby('created_at', 'desc')
-            ->get();
+            ->paginate(7);
         return $tests;
     }
 
