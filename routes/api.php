@@ -30,10 +30,16 @@ Route::middleware('wp.jwt')->get('/user', function (Request $request) {
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot.password');
-Route::post('/check-code', [AuthController::class, 'checkCode'])->name('check.code');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password');
-
+Route::post('/forgot-password', [
+    AuthController::class,
+    'forgotPassword',
+])->name('forgot.password');
+Route::post('/check-code', [AuthController::class, 'checkCode'])->name(
+    'check.code'
+);
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name(
+    'reset.password'
+);
 
 Route::POST('test-water', [TestController::class, 'testWater']);
 Route::middleware(['wp.jwt'])->group(function () {
@@ -56,7 +62,7 @@ Route::middleware(['wp.jwt'])->group(function () {
 
     Route::apiResource('notifications', NotificationController::class)->only([
         'index',
-        'show'
+        'show',
     ]);
 
     Route::post('checkout', [StripeController::class, 'checkout'])->name(
@@ -64,9 +70,22 @@ Route::middleware(['wp.jwt'])->group(function () {
     );
 });
 
-Route::get('checkout/cancel', [StripeController::class, 'paymentCancel'])->name('checkout.cancel');
-Route::get('checkout/success', [StripeController::class,'paymentSuccess'])->name('checkout.success');
+Route::get('checkout/cancel', [StripeController::class, 'paymentCancel'])->name(
+    'checkout.cancel'
+);
+Route::get('checkout/success', [
+    StripeController::class,
+    'paymentSuccess',
+])->name('checkout.success');
+Route::post('orders/create', [StripeController::class, 'storeOrder'])->name(
+    'order.create'
+);
 
-Route::post('admin/notification', [StripeController::class,'sendNotification'])->name('notification');
-Route::post('admin/notification/many', [StripeController::class,'sendNotificationMany'])->name('notificationMany');
-
+Route::post('admin/notification', [
+    StripeController::class,
+    'sendNotification',
+])->name('notification');
+Route::post('admin/notification/many', [
+    StripeController::class,
+    'sendNotificationMany',
+])->name('notificationMany');

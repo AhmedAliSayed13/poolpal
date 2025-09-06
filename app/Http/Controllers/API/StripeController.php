@@ -122,8 +122,9 @@ class StripeController extends BaseController
         }
     }
 
-    public function storeOrder($session, $token)
+    public function storeOrder(Request $request)
     {
+        $token    = $request->bearerToken();
         // // 1. بيانات المستخدم
         $userData = $this->getUserData($token);
         if (! $userData || ! isset($userData['data']['ID'])) {
@@ -153,15 +154,17 @@ class StripeController extends BaseController
         $shippingLines = [];
 
         // 5. تجهيز الطلب النهائي
+
+
         $order = [
-            'customer_id'          => $userData['data']['ID'],
-            'payment_method'       => 'cod', // أو stripe
-            'payment_method_title' => 'Cash on Delivery',
-            'set_paid'             => true,
-            'billing'              => $userData['data']['billing'],
-            'shipping'             => $userData['data']['shipping'],
-            'line_items'           => $lineItems,
-            'shipping_lines'       => $shippingLines,
+                'customer_id'          => $userData['data']['ID'],
+                'payment_method'       => $request->payment_method,
+                'payment_method_title' => $request->payment_method_title,
+                'set_paid'             => $request->set_paid,
+                'billing'              => $request->billing,
+                'shipping'             => $request->shipping,     
+                'line_items'           => $lineItems,
+                'shipping_lines'       => $shippingLines,
         ];
 
         // 6. إرسال الطلب إلى WooCommerce
@@ -176,6 +179,8 @@ class StripeController extends BaseController
 
         // 7. النتيجة
         if ($response->successful()) {
+                // 8. حذف السلة
+             $this->clearCart($token);
             return $this->success('success', 'Order created successfully', 200);
         } else {
             return $this->error('error', 'Order creation failed', 400);
@@ -213,9 +218,6 @@ class StripeController extends BaseController
     }
     public function sendNotificationMany(Request $request)
     {
-
-        
-
         try {
             $response = FirebaseNotification::sendNotificationToMany(
 

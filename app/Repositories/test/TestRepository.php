@@ -48,6 +48,7 @@ class TestRepository implements TestInterface
             ->where('user_id', $request->get('user')->id)
             ->filter()
             ->with(['pool', 'poolWaterStatus'])
+            ->orderby('created_at', 'desc')
             ->get();
         return $tests;
     }
