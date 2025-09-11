@@ -15,6 +15,7 @@ class Slider extends Model
         'title',
         'link',
         'status',
+        'product_id'
 
     ];
     protected $cats=[

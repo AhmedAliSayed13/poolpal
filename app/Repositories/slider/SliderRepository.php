@@ -33,13 +33,13 @@ class SliderRepository implements SliderInterface
 
         $slider = new Slider();
         $slider->title = $request->title;
+        $slider->product_id = $request->product_id;
         if ($request->hasFile('image')) {
             $filePublicManager = new FilePublicManager('system');
             $imageName = $filePublicManager->uploadFile(
                 $request->file('image'),
                 'sliders'
             );
-
             $slider->link = $imageName ;
         }
 
@@ -59,6 +59,7 @@ class SliderRepository implements SliderInterface
     {
         $slider = Slider::find($id);
         $slider->title = $request->title;
+        $slider->product_id = $request->product_id;
         if ($request->hasFile('image')) {
             $filePublicManager = new FilePublicManager('system');
             $imageName = $filePublicManager->updateFile(

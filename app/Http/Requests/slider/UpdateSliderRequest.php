@@ -23,6 +23,7 @@ class UpdateSliderRequest extends FormRequest
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'title' => 'required|string',
             'status' => 'required|boolean',
+            'product_id' => 'nullable|integer'
         ];
     }
 

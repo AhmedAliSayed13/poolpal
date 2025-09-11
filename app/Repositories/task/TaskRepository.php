@@ -22,8 +22,8 @@ class TaskRepository implements TaskInterface
     {
         $tasks = Task::AcceptRequest(getFillableSort('Task'))
             ->where('user_id', $request->get('user')->id)
+            ->orderBy('id', 'desc')
             ->filter()
-            ->orderBy('created_at', 'desc')
             ->paginate(7);
         return $tasks;
     }

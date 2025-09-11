@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('title');
             $table->string('link');
             $table->boolean('status')->default(true);
+            $table->integer('product_id')->nullable();
             $table->timestamps();
         });
     }
